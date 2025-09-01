@@ -10,16 +10,39 @@
 
 ## 준비 작업
 
-- [compmath.korea.ac.kr/gitlab](compmath.korea.ac.kr/gitlab) 학생 등록
-- 피그마 등록
+1. 프로그램 설치
 
-- 프로그램 설치
+   - [Node.js(LTS)](https://nodejs.org/ko/download/)
+   - [VS Code](https://code.visualstudio.com/download)
+   - [Git](https://git-scm.com/downloads) - 분산 버전 관리 시스템
 
-  - [Node.js(LTS)](https://nodejs.org/ko/download/)
-  - [VS Code](https://code.visualstudio.com/download)
-  - [Git](https://git-scm.com/downloads) - 분산 버전 관리 시스템
+1. [https://compmath.korea.ac.kr/gitlab](https://compmath.korea.ac.kr/gitlab) 수강생 등록
 
-## 프로젝트 주제
+1. 깃 클론
+
+   ```bash
+   git clone https://compmath.korea.ac.kr/gitlab/courses1/indust-math/2025-2/2025-industmath-2.git
+   ```
+
+1. 피그마 등록
+
+## 기술 세부 사항
+
+### 프론트엔드
+
+- Vite(Bundler)
+- React.js(Frontend Framework)
+- Typescript(Type)
+- Tailwindcss(Style)
+- Wouter(Router)
+
+### 백엔드
+
+- Node.js(LTS v22)
+- Express.js(Backend)
+- PostgreSQL(v17): Database
+
+## 프로젝트 주제(예시)
 
 - 챗팅: 인증, 메시지 송수신,
 - 키오스크: 카페, 음식점
