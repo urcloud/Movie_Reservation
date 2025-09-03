@@ -69,6 +69,10 @@ cd frontend
 npm install
 ```
 
+```bash
+npm run dev
+```
+
 ### 백엔드
 
 프로젝트를 복제한 후 처음 실행할 때는 다음과 같은 명령어를 실행해서 필요한 패키지들을 설치하셔야 합니다. 프로젝트 복제한 후 최초 한 번만 필요합니다.
@@ -79,4 +83,8 @@ cd backend
 
 ```bash
 npm install
+```
+
+```bash
+npm run dev
 ```
