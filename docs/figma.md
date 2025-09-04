@@ -12,3 +12,9 @@
 
 - shift + 1: 축소
 - shift + 2: 선택 확대
+
+## Tutorial
+
+- [Figma Learn](https://help.figma.com/hc/en-us)
+- [Figma Learn - Courses](https://help.figma.com/hc/en-us/sections/23691657321239)
+- [Figma Design for beginners](https://help.figma.com/hc/en-us/sections/30880632542743-Figma-Design-for-beginners)
