@@ -95,10 +95,10 @@ npm run dev
 
 https://www.notion.so/2682843a6e8a808597fae82f9410fa00?v=2682843a6e8a80478529000c6a996a24&source=copy_link
 
-![api](img\api.png)
+![api](img/api.png)
 
 ### erd 설계
 
 https://www.erdcloud.com/d/7JWz4DsBy7tMmBxj8
 
-![erd](img\erd.png)
+![erd](img/erd.png)
