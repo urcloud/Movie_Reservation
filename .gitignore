@@ -52,3 +52,6 @@ pids
 
 # Local History for Visual Studio Code
 .history/
+
+# README용 img파일
+.img/
