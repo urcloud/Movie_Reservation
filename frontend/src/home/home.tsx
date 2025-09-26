@@ -1,11 +1,22 @@
+import { useState } from 'react';
 import { ContentLayout } from '../layouts/content-layout';
 import { PageLayout } from '../layouts/page-layout';
 import { HomeHeader } from './home-header';
+import { Modal } from '../commons/modal';
+import { Button } from '../commons/button';
 
 export const Home = () => {
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <PageLayout>
       <HomeHeader />
+      <Button onClick={() => setShowModal(true)}>show modal</Button>
+      {showModal && (
+        <Modal onClose={() => setShowModal(false)}>
+          <div>Hi</div>
+        </Modal>
+      )}
       <ContentLayout>
         산업수학 2 프로젝트에 오신걸 환영합니다. Lorem ipsum dolor sit amet
         consectetur adipisicing elit. Blanditiis consectetur corrupti dolor quam
