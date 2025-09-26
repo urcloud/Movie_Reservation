@@ -10,7 +10,6 @@ import {
   createRemoveQueryById,
   createUpdateQueryById,
   getFilterText,
-  getFilterTextWithRootFilter,
   getFindOptionsText,
 } from './queries';
 import { Filter, FindOptions, WithId } from './db.type';
@@ -31,22 +30,22 @@ export const connectToPg = async () => {
  * @param filter filter가 모델의 부분이면 주어진 조건을 모두 만족하는 것을 찾고, string 문자열이면 sql raw text를 입력
  * @returns WithId<T>[]
  */
-export const find = async <T extends QueryResultRow, R = T>(
+export const find = async <T extends QueryResultRow>(
   tableName: string,
   filter?: Filter<T>,
   options?: FindOptions<T>,
 ) => {
   let text = `SELECT * FROM ${tableName}`;
   if (filter && !isEmpty(filter)) {
-    const whereText = getFilterTextWithRootFilter(filter);
+    const whereText = getFilterText(filter);
     text += ` WHERE ${whereText}`;
   }
-  console.log('options in find ', options);
+  // console.log('options in find ', options);
   if (options && !isEmpty(options)) {
     text += getFindOptionsText(options);
   }
   console.log('find sql text:', text);
-  return (await query<WithId<R>>(text)).rows;
+  return (await query<WithId<T>>(text)).rows;
 };
 
 export const findOne = async <T extends QueryResultRow>(
@@ -80,7 +79,7 @@ export const insertMany = async <T extends {}>(
   if (!models?.length) {
     return;
   }
-  const queryConfig = createInsertManyQuery<T>(tableName, models);
+  const queryConfig = createInsertManyQuery(tableName, models);
   return (await query<WithId<T>>(queryConfig)).rows;
 };
 
@@ -98,7 +97,7 @@ export const remove = async <T extends QueryResultRow>(
 ) => {
   let text = `DELETE FROM ${tableName}`;
   if (filter && !isEmpty(filter)) {
-    const whereText = getFilterTextWithRootFilter(filter);
+    const whereText = getFilterText(filter);
     text += ` WHERE ${whereText}`;
   }
   text += ' RETURNING *';

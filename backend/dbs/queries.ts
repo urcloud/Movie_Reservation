@@ -30,8 +30,7 @@ export const createInsertManyQuery = <T extends {}>(
     .join(', ');
   text += `) VALUES `;
 
-  // const values = models.map((model) => getPairedValueText(model)).join(",");
-  const numberedPairText = getNumberdPair(models);
+  const numberedPairText = getNumberedPair(models);
   text += numberedPairText;
   text += ` RETURNING *`;
   const values = getFlatValues(models);
@@ -46,7 +45,6 @@ export const createUpdateQueryById = <T>(
 ) => {
   let text = `UPDATE ${tableName} SET `;
   text += Object.entries(model)
-    // .filter(([_, v]) => v !== undefined && v !== null)
     .map(([key, value]) => {
       if (typeof value === 'string') {
         return `${key} = '${value}'`;
@@ -79,6 +77,7 @@ const getFlatValues = <T extends {}>(arr: T[]) => {
   );
   return values;
 };
+
 const getPairedValueText = <T extends {}>(model: T) => {
   let text = Object.entries(model)
     .filter(([_, v]) => v !== undefined && v !== null)
@@ -96,7 +95,7 @@ const getPairedValueText = <T extends {}>(model: T) => {
   return text;
 };
 
-const getNumberdPair = <T extends {}>(models: T[]) => {
+const getNumberedPair = <T extends {}>(models: T[]) => {
   let numKeys = Object.keys(models[0]).length;
   let numberedPair = models
     .map((model, i) => {
@@ -109,12 +108,13 @@ const getNumberdPair = <T extends {}>(models: T[]) => {
   console.log('paired number text:', numberedPair);
   return numberedPair;
 };
+
 export const getPairedValuesText = <T extends {}>(models: T[]) => {
   const values = models.map((model) => getPairedValueText(model)).join(', ');
   return values;
 };
 
-export const getFilterText = <T>(filter: Partial<T>) => {
+export const getFilterText = <T>(filter: Filter<T>) => {
   const whereText = Object.entries(filter)
     .map(([key, value]) => {
       if (typeof value === 'string') {
@@ -127,24 +127,6 @@ export const getFilterText = <T>(filter: Partial<T>) => {
     })
     .join(' AND ');
   return whereText;
-};
-
-export const getFilterTextWithRootFilter = <T>(filter: Filter<T>) => {
-  return Object.entries<any>(filter)
-    .map(([k, v]) => {
-      if (k === '$or') {
-        const or = v
-          .map((entry: Partial<T>) => getFilterText<T>(entry))
-          .join(' OR ');
-        // console.log(or)
-        return '(' + or + ')';
-      } else {
-        const kv = getFilterText({ [k]: v });
-        // console.log(kv)
-        return kv;
-      }
-    })
-    .join(' AND ');
 };
 
 export const getFindOptionsText = <T>(options: FindOptions<T>) => {
