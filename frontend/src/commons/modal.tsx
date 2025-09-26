@@ -27,6 +27,7 @@ export const Modal = ({ children, onClose }: Props) => {
           'top-1/2',
           '-translate-1/2',
           'p-3',
+          'rounded-lg',
         )}
         onClick={(e) => e.stopPropagation()}
       >
