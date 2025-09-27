@@ -1,4 +1,4 @@
-import { ExpressUserRequest, UserModel } from '../users/user.model';
+import { ExpressUserRequest, UserModel } from '../users/user-model';
 import { WithId } from '../helpers/type.helper';
 
 declare global {

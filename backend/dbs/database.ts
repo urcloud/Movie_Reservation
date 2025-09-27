@@ -12,7 +12,7 @@ import {
   getFilterText,
   getFindOptionsText,
 } from './queries';
-import { Filter, FindOptions, WithId } from './db.type';
+import { Filter, FindOptions, WithId } from './db-type';
 import { appConfig } from '../configs/app-config';
 
 // 다음은 포스트그레스 NUMERIC 타입을 자바스크립트 number 타입으로 변경합니다.

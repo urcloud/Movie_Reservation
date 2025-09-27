@@ -8,4 +8,7 @@ db.connectToPg()
       console.log(`app is running on port ${appConfig.port}.`);
     });
   })
-  .catch((e) => console.error(e));
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });

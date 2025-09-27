@@ -1,5 +1,5 @@
 import { QueryConfig } from 'pg';
-import { Filter, FindOptions, Sort } from './db.type';
+import { Filter, FindOptions, Sort } from './db-type';
 
 export const createInsertQuery = <T extends {}>(
   tableName: string,
