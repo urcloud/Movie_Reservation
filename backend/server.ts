@@ -1,6 +1,11 @@
 import app from './app';
 import { appConfig } from './configs/app-config';
+import { db } from './dbs';
 
-app.listen(appConfig.port, () => {
-  console.log(`app is running on port ${appConfig.port}.`);
-});
+db.connectToPg()
+  .then(() => {
+    app.listen(appConfig.port, () => {
+      console.log(`app is running on port ${appConfig.port}.`);
+    });
+  })
+  .catch((e) => console.error(e));
