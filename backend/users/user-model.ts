@@ -1,44 +1,40 @@
 import { z } from 'zod/v4';
 import { WithId } from '../dbs/db-type';
+import { ROLE_NAME } from './role-model';
 
-export const authUserSchema = z.object({
-  id: z.bigint(),
-  username: z.string(),
-  role: z.string(),
-});
-
-export const loginUserSchema = z.object({
+export const userLoginSchema = z.object({
   username: z.string(),
   password: z.string(),
 });
 
-export const registerUserSchema = z.object({
+export const userCreateSchema = z.object({
   username: z.string().trim().min(3).max(30),
   password: z.string().trim().min(6),
-  name: z.string().min(1).max(50),
+  full_name: z.string().min(1).max(50),
   email: z.email(),
 });
 
-export type AuthUser = z.infer<typeof authUserSchema>;
+export const userPublicSchema = z.object({
+  id: z.bigint(),
+  username: z.string(),
+  role_name: z.literal(Object.values(ROLE_NAME)),
+  full_name: z.string(),
+});
 
-export type LoginUser = z.infer<typeof loginUserSchema>;
+export type UserLogin = z.infer<typeof userLoginSchema>;
 
-export type RegisterUser = z.infer<typeof registerUserSchema>;
+export type UserCreate = z.infer<typeof userCreateSchema>;
 
-export type ResponseUser = {
-  id: bigint;
-  username: string;
-  role: string;
-  name: string;
-};
+export type UserPublic = z.infer<typeof userPublicSchema>;
 
-export type ExpressUserRequest = Pick<WithId<UserModel>, 'id'>;
+export type UserExpressRequest = Pick<WithId<UserModel>, 'id'>;
 
 export interface UserModel {
+  id: bigint;
   username: string;
   email: string;
-  name: string;
+  full_name: string;
   password: string;
   role_id: bigint; // FK roles(id)
-  created_at?: Date;
+  created_at: Date;
 }
