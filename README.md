@@ -16,15 +16,15 @@
    - [VS Code](https://code.visualstudio.com/download)
    - [Git](https://git-scm.com/downloads) - 분산 버전 관리 시스템
 
-1. [https://compmath.korea.ac.kr/gitlab](https://compmath.korea.ac.kr/gitlab) 수강생 등록
+2. [https://compmath.korea.ac.kr/gitlab](https://compmath.korea.ac.kr/gitlab) 수강생 등록
 
-1. 깃 클론
+3. 깃 클론
 
    ```bash
    git clone https://compmath.korea.ac.kr/gitlab/courses1/indust-math/2025-2/2025-industmath-2.git
    ```
 
-1. 피그마 등록
+4. 피그마 등록
 
 ## 기술 세부 사항
 
@@ -136,3 +136,17 @@ npm run dev
    ```
 
 1. 백엔드 서버를 다시 실행합니다.
+
+## 설계
+
+### api 명세서
+
+https://www.notion.so/2682843a6e8a808597fae82f9410fa00?v=2682843a6e8a80478529000c6a996a24&source=copy_link
+
+![api](img/api.png)
+
+### erd 설계
+
+https://www.erdcloud.com/d/7JWz4DsBy7tMmBxj8
+
+![erd](img/erd.png)
