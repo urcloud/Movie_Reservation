@@ -28,10 +28,10 @@ export const AppRouter = () => {
               </Route>
             </Switch>
           </Route>
-          <Route path={'/guest-reservation'}>
+          <Route path={'/guest-reservations'}>
             <GuestBooking />
           </Route>
-          <Route path={'/guest-reservation/:id'}>
+          <Route path={'/guest-reservations/:id'}>
             {(params) => <BookingDetail id={params.id} />}
           </Route>
         </Switch>
