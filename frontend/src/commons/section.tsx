@@ -4,11 +4,10 @@ import { cx } from './cx';
 import type { ReactNode } from 'react';
 
 interface section {
-  title: string; //섹션 타이틀로 <h2>에 들어감
   children: ReactNode; //섹션의 본문(포스터, 정보 등)
 }
 
-export const Section = ({ title, children }: section) => {
+export const Section = ({children }: section) => {
   return (
     <section
       className={cx(
@@ -18,7 +17,6 @@ export const Section = ({ title, children }: section) => {
         'min-h-[740px] md:min-h-[1080px]' //모바일, PC 높이 기준
       )}
     >
-      <h2 className="text-lg font-bold mb-4">{title}</h2> {/* 섹션 제목 */}
       <div className="flex-1 flex flex-col gap-4">{children}</div> {/*데스크탑 가로 배치 시 영역 확장됨 */}
     </section>
   );

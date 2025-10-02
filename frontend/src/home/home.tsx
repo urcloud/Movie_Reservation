@@ -68,7 +68,7 @@ export const Home = () => {
         </div>
 
         {/* Section 렌더링, 제목 activeTab 표시, 영화 카드들을 grid로 1열 배치 */}
-        <Section title={activeTab}>
+        <Section>
           <div className="grid grid-cols-1 gap-4">
             {movies.map((movie) => (
               // 내부 정보레이어 위치 기준, 크기 지정, 내용 넘치면 숨김, 모서리 둥글게, hover 효과 적용
