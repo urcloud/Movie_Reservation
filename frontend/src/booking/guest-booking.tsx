@@ -5,16 +5,25 @@ import { Input } from '../commons/input';
 import { Button } from '../commons/button';
 import { Link } from 'wouter';
 
+const bookData = [
+  { id: 1, movie: '인터스텔라', date: '2025-10-05', seat: 'A12' },
+  { id: 2, movie: '오펜하이머', date: '2025-10-12', seat: 'C07' },
+];
+
+interface GuestBook {
+  id: number;
+  movie: string;
+  date: string;
+  seat: string;
+}
+
 export const GuestBooking = () => {
   const [email, setEmail] = useState('');
-  const [bookings, setBookings] = useState<any[]>([]);
+  const [bookings, setBookings] = useState<GuestBook[]>([]);
 
   const handleCheck = () => {
     if (email) {
-      setBookings([
-        { id: 1, movie: '인터스텔라', date: '2025-10-05', seat: 'A12' },
-        { id: 2, movie: '오펜하이머', date: '2025-10-12', seat: 'C07' },
-      ]);
+      setBookings(bookData);
     }
   };
 
