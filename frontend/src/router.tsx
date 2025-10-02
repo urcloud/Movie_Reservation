@@ -1,8 +1,8 @@
 import { Route, Router, Switch } from 'wouter';
 import { Home } from './home/home';
-import { MovieEdit } from './movieinfo/movie-edit';
-import { MovieIndex } from './movieinfo/movie-index';
-import { MovieRegist } from './movieinfo/movie-inform';
+import { MovieEdit } from './movies/movie-edit';
+import { MoviesList } from './movies/movie-list';
+import { MovieRegister } from './movies/movie-register';
 
 export const AppRouter = () => {
   return (
@@ -11,14 +11,18 @@ export const AppRouter = () => {
         <Route path={'/'}>
           <Home />
         </Route>
-        <Route path={'/movie-edit'}>
-          <MovieEdit />
-        </Route>
-        <Route path={'/movie-index'}>
-          <MovieIndex />
-        </Route>
-        <Route path={'/movie-regist'}>
-          <MovieRegist />
+        <Route path={'/movies'} nest>
+          <Switch>
+            <Route path={'/'}>
+              <MoviesList />
+            </Route>
+            <Route path={'/edit'}>
+              <MovieEdit />
+            </Route>
+            <Route path={'/register'}>
+              <MovieRegister />
+            </Route>
+          </Switch>
         </Route>
       </Switch>
     </Router>
