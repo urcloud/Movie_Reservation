@@ -1,11 +1,24 @@
 import { Route, Router, Switch } from 'wouter';
 import { Home } from './home/home';
+import { MovieEdit } from './home/movie-edit';
+import { MovieIndex } from './home/movie-index';
+import { MovieRegist } from './home/movie-inform';
+
 export const AppRouter = () => {
   return (
     <Router>
       <Switch>
         <Route path={'/'}>
           <Home />
+        </Route>
+        <Route path={'/home/movie-edit'}>
+          <MovieEdit />
+        </Route>
+        <Route path={'/home/movie-index'}>
+          <MovieIndex />
+        </Route>
+        <Route path={'/home/movie-regist'}>
+          <MovieRegist />
         </Route>
       </Switch>
     </Router>
