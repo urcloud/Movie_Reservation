@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Input } from "../commons/input";
+import { useLocation } from "wouter";
 
 export const SignupForm = () => {
+    const [, setLocation] = useLocation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [birth, setBirth] = useState("");
@@ -19,6 +21,7 @@ export const SignupForm = () => {
       return;
     }
     alert("회원가입 성공!");
+    setLocation("/login");
   };
 
   return (

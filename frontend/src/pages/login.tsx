@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Input } from "../commons/input";
-
+import { useLocation } from "wouter";
 /* 로그인 폼 */
 export function LoginForm() {
+    const [, setLocation] = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
@@ -14,6 +15,7 @@ export function LoginForm() {
     }
     if (email === "test@example.com" && password === "1234") {
       alert("로그인 성공!");
+      return  setLocation("/");
     } else {
       setErrorMsg("이메일 또는 비밀번호가 올바르지 않습니다.");
     }
