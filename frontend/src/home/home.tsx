@@ -7,6 +7,12 @@ import { Button } from '../commons/button';
 import { tabData } from '../data/movies';
 import type { Movie } from '../models/movie';
 
+const tabNameMap: Record<string, string> = {
+  Top3: 'Top 3',
+  nowPlaying: '현재상영작',
+  comingSoon: '상영예정작',
+};
+
 export const Home = () => {
   const [showModal, setShowModal] = useState(false);
   const [activeTab, setActiveTab] = useState('Top3');
@@ -33,19 +39,17 @@ export const Home = () => {
         </div>
 
         {/* 탭 영역 */}
-        <div className='grid grid-cols-3 text-center my-4'>
-          {Object.keys(tabData).map((tab) => (
-            <span
-              key={tab}
-              className={`cursor-pointer py-2 ${
-                activeTab === tab ? 'font-bold border-b-2 border-blue-500' : ''
-              }`}
-              onClick={() => setActiveTab(tab)}
-            >
-              {tab}
-            </span>
-          ))}
-        </div>
+      <div className="grid grid-cols-3 text-center my-4">
+        {Object.keys(tabData).map((key) => (
+          <span
+            key={key}
+            className={`cursor-pointer py-2 ${activeTab === key ? 'font-bold border-b-2 border-blue-500' : ''}`}
+            onClick={() => setActiveTab(key)}
+          >
+            {tabNameMap[key]}
+          </span>
+        ))}
+      </div>
 
         {/* 영화 카드 리스트 */}
         <div className='grid grid-cols-1 gap-4'>
