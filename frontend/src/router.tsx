@@ -6,6 +6,7 @@ import { MovieRegister } from './movies/movie-register';
 import { AppLayout } from './layouts/app-layout';
 import { GuestBooking } from './booking/guest-booking';
 import { BookingDetail } from './booking/booking-detail';
+import { Admin } from './admin/admin-page';
 
 export const AppRouter = () => {
   return (
@@ -14,6 +15,9 @@ export const AppRouter = () => {
         <Switch>
           <Route path={'/'}>
             <Home />
+          </Route>
+          <Route path={'/admin'}>
+            <Admin />
           </Route>
           <Route path={'/movies'} nest>
             <Switch>
