@@ -5,7 +5,11 @@ import { MoviesList } from './movies/movie-list';
 import { MovieRegister } from './movies/movie-register';
 import { AppLayout } from './layouts/app-layout';
 import { GuestBooking } from './booking/guest-booking';
-import { BookingDetail } from './booking/booking-detail';
+import { BookingDetail } from './booking/guest-booking-detail';
+import { MemberBooking } from './booking/member-booking';// (예) src/app-layout.tsx
+import { MemberBookingDetail } from './booking/member-booking-detail';
+
+
 
 export const AppRouter = () => {
   return (
@@ -33,6 +37,12 @@ export const AppRouter = () => {
           </Route>
           <Route path={'/guest-reservations/:id'}>
             {(params) => <BookingDetail id={params.id} />}
+          </Route>
+          <Route path={'/mem-reservations'}>
+            <MemberBooking />
+          </Route>
+          <Route path="/mem-reservations/:id">
+            {(params) => <MemberBookingDetail id={params.id} />}
           </Route>
         </Switch>
       </AppLayout>

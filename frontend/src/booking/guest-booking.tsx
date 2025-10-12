@@ -4,63 +4,56 @@ import { ContentLayout } from '../layouts/content-layout';
 import { Input } from '../commons/input';
 import { Button } from '../commons/button';
 import { Link } from 'wouter';
-
-const bookData = [
-  { id: 1, movie: '인터스텔라', date: '2025-10-05', seat: 'A12' },
-  { id: 2, movie: '오펜하이머', date: '2025-10-12', seat: 'C07' },
-];
-
-interface GuestBook {
-  id: number;
-  movie: string;
-  date: string;
-  seat: string;
-}
+import { Bookings } from '../booking/bookings';
 
 export const GuestBooking = () => {
   const [email, setEmail] = useState('');
-  const [bookings, setBookings] = useState<GuestBook[]>([]);
+  const [submitted, setSubmitted] = useState(false);
 
-  const handleCheck = () => {
-    if (email) {
-      setBookings(bookData);
-    }
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // 어떤 문자열이든 OK — 제출하면 전체 리스트 노출
+    setSubmitted(true);
   };
+
+  const rows = submitted ? Bookings.listGuest() : [];
 
   return (
     <PageLayout>
       <ContentLayout>
-        <Link to='/'>
-          <button className='mt-2 px-2 py-2 bg-black text-white rounded'>
-            홈
-          </button>
-        </Link>
-        <h1 className='text-xl font-bold mb-4'>비회원 예매 조회</h1>
-
-        {/* 이메일 입력 */}
-        <div className='flex gap-2 mb-4'>
-          <Input
-            type='email'
-            placeholder='메일을 입력해주세요'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className='border flex-1'
-          />
-          <Button className='bg-blue-500 text-white' onClick={handleCheck}>
-            조회하기
-          </Button>
+          <div className="mb-4 flex items-center justify-between">
+          <Link to="/">
+            <Button className="px-3 py-2 rounded bg-gray-200">홈</Button>
+          </Link>
+          <Link to="/mem-reservations">
+            <Button className="px-3 py-2 rounded bg-black text-white">회원 예매</Button>
+          </Link>
         </div>
+        <h1 className="text-xl font-bold mb-4">비회원 예매내역 조회</h1>
 
-        {/* 예매 내역 표시 */}
-        {bookings.length > 0 && (
-          <div className='space-y-2'>
-            <h2 className='font-semibold'>내 예매 내역</h2>
-            {bookings.map((b) => (
+        {/* 이메일 입력  */}
+        <form onSubmit={onSubmit} className="mb-4 grid gap-2 sm:grid-cols-[1fr_auto]">
+          <Input
+            type="text"
+            value={email}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+            placeholder="이메일을 입력하세요"
+          />
+          <Button type="submit" className="bg-black text-white rounded px-4 py-2">조회</Button>
+        </form>
+
+        {/* 결과 리스트 */}
+        {rows.length === 0 ? (
+          <p className="text-gray-500">이메일을 입력하고 ‘조회’를 누르면 예매내역이 표시됩니다.</p>
+        ) : (
+          <div className="grid gap-2">
+            {rows.map((b) => (
               <Link key={b.id} to={`/guest-reservations/${b.id}`}>
-                <div className='border p-2 rounded shadow-sm bg-gray-50 cursor-pointer hover:bg-gray-100'>
-                  <p>영화: {b.movie}</p>
-                  <p>날짜: {b.date}</p>
-                  <p>좌석: {b.seat}</p>
+                <div className="border p-3 rounded bg-white shadow-sm hover:bg-gray-50 cursor-pointer">
+                  <p className="font-semibold"> {b.movie}</p>
+                  <p className="text-sm text-gray-600">
+                    {b.date} {b.time} · {b.theater} · 좌석 {b.seat}
+                  </p>
                 </div>
               </Link>
             ))}
