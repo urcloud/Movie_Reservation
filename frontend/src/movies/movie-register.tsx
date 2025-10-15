@@ -2,12 +2,14 @@ import { Button } from '../commons/button';
 import { Input } from '../commons/input';
 
 export const MovieRegister = () => {
+      const GoBack = () => {
+    window.history.back();
+  }
   return (
     <div>
       <Button
         type='button'
-        className='absolute top-2 right-2 bg-gray-500 p-2 rounded'
-      >
+        className='absolute top-2 right-2 bg-gray-500 p-2 rounded' onClick={GoBack}>
         이전화면
       </Button>
       <form className='flex flex-col mt-20 gap-4 p-4 max-w-md mx-auto'>

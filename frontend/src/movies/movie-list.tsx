@@ -5,13 +5,15 @@ import { mockMovies } from '../data/movies';
 
 export const MoviesList = () => {
 
+  const GoBack = () => {
+    window.history.back();
+  };
 
   return (
     <div>
       <Button
         type='button'
-        className='absolute top-2 right-2 bg-gray-500 p-2 rounded'
-      >
+        className='absolute top-2 right-2 bg-gray-500 p-2 rounded' onClick={GoBack}>
         이전화면
       </Button>
       <form className='flex flex-col gap-4 p-4 m-30 max-w-md mx-auto'>
@@ -64,7 +66,7 @@ export const MoviesList = () => {
                 수정
               </Button>
             </Link>
-            <Button type='button' className='bg-red-500 w-20 h-16 p-2 rounded'>
+            <Button type='button' className='bg-gray-500 w-20 h-16 p-2 rounded'>
               영화
               <br />
               삭제

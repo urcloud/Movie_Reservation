@@ -2,10 +2,13 @@ import { Button } from '../commons/button';
 import { Input } from '../commons/input';
 
 export const MovieEdit = () => {
+      const GoBack = () => {
+    window.history.back();
+  };
     return (
         
         <div>
-            <Button type="button" className="absolute top-2 right-2 bg-gray-500 p-2 rounded">
+            <Button type="button" className="absolute top-2 right-2 bg-gray-500 p-2 rounded" onClick={GoBack}>
                     이전화면
                 </Button>
         <form className="flex flex-col mt-20 gap-4 p-4 max-w-md mx-auto">
@@ -24,7 +27,7 @@ export const MovieEdit = () => {
                 <Button type="submit" className = "bg-gray-500 p-2 rounded">
                     수정
                 </Button>
-                <Button type="submit" className = "bg-gray-500 p-2 rounded">
+                <Button type='button' className = "bg-gray-500 p-2 rounded">
                     영화 삭제
                 </Button>
         </form>
