@@ -6,6 +6,8 @@ import { MovieRegister } from './movies/movie-register';
 import { AppLayout } from './layouts/app-layout';
 import { GuestBooking } from './booking/guest-booking';
 import { BookingDetail } from './booking/booking-detail';
+import { MovieListPage } from './movielist/movielistpage';
+import { MovieDetailPage } from './movielist/movielist-detail';
 
 export const AppRouter = () => {
   return (
@@ -34,6 +36,12 @@ export const AppRouter = () => {
           <Route path={'/guest-reservations/:id'}>
             {(params) => <BookingDetail id={params.id} />}
           </Route>
+          <Route path={'/movielist'}>
+                <MovieListPage />
+              </Route>
+              <Route path={'/movielist/:id'}>
+  {(params) => <MovieDetailPage id={params.id} />}
+</Route>
         </Switch>
       </AppLayout>
     </Router>
