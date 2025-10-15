@@ -5,7 +5,7 @@ import { Modal } from '../commons/modal';
 import { Button } from '../commons/button';
 import { Link } from 'wouter';
 
-export interface BookingLite {
+export interface ReservLite {
   id: string;
   movie: string;
   date: string;
@@ -14,12 +14,12 @@ export interface BookingLite {
   seat: string;
 }
 
-export function BookingDetailView({
-  booking,
+export function ReservDetailView({
+  Reserv,
   backTo = '/',
   title = '예매 상세',
 }: {
-  booking: BookingLite;
+  Reserv: ReservLite;
   backTo?: string;
   title?: string;
 }) {
@@ -42,11 +42,11 @@ export function BookingDetailView({
         <h1 className="text-xl font-bold mb-4">{title}</h1>
 
         <div className="border p-4 rounded shadow bg-gray-50">
-          <p>예매번호: {booking.id}</p>
-          <p>영화: {booking.movie}</p>
-          <p>날짜/시간: {booking.date} {booking.time}</p>
-          <p>상영관: {booking.theater}</p>
-          <p>좌석: {booking.seat}</p>
+          <p>예매번호: {Reserv.id}</p>
+          <p>영화: {Reserv.movie}</p>
+          <p>날짜/시간: {Reserv.date} {Reserv.time}</p>
+          <p>상영관: {Reserv.theater}</p>
+          <p>좌석: {Reserv.seat}</p>
           <p className="mt-2">
             상태:{' '}
             {isCanceled ? (

@@ -1,12 +1,12 @@
-// src/pages/guest-booking.tsx
+// src/pages/guest-Reserv.tsx
 import { PageLayout } from '../layouts/page-layout';
 import { ContentLayout } from '../layouts/content-layout';
 import { Button } from '../commons/button';
 import { Link } from 'wouter';
-import { Bookings } from '../booking/bookings';
+import { Reservs } from '../data/reservations';
 
-export const MemberBooking = () => {
-  const rows = Bookings.listMember();
+export const MemberResrv = () => {
+  const rows = Reservs.listMember();
 
   return (
     <PageLayout>
@@ -24,11 +24,9 @@ export const MemberBooking = () => {
           {rows.map(b => (
             <Link key={b.id} to={`/mem-reservations/${b.id}`}>
               <div className="border p-3 rounded bg-white shadow-sm hover:bg-gray-50 cursor-pointer">
-                <p className="font-semibold">#{b.id} · {b.movie}</p>
+                <p className="font-semibold"> {b.movie}</p>
                 <p className="text-sm text-gray-600">{b.date} {b.time} · {b.theater} · 좌석 {b.seat}</p>
-                <div className="mt-2">
-                  <Button className="bg-blue-500 text-white rounded px-3 py-2">상세</Button>
-                </div>
+              
               </div>
             </Link>
           ))}

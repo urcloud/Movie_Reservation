@@ -4,19 +4,18 @@ import { ContentLayout } from '../layouts/content-layout';
 import { Input } from '../commons/input';
 import { Button } from '../commons/button';
 import { Link } from 'wouter';
-import { Bookings } from '../booking/bookings';
+import { Reservs } from '../data/reservations';
 
-export const GuestBooking = () => {
+export const GuestReserv= () => {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // 어떤 문자열이든 OK — 제출하면 전체 리스트 노출
     setSubmitted(true);
   };
 
-  const rows = submitted ? Bookings.listGuest() : [];
+  const rows = submitted ? Reservs.listGuest() : [];
 
   return (
     <PageLayout>
