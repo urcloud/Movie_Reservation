@@ -79,7 +79,7 @@ export const MovieDetailPage = ({ id }: Props) => {
     <PageLayout>
       <ContentLayout>
         <div className='flex justify-between items-center mb-6'>
-          <Link to='/movies'>
+          <Link to='/movielist'>
             <Button className='bg-gray-500 text-white px-4 py-2 rounded'>
               목록으로
             </Button>
