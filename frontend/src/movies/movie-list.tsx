@@ -5,25 +5,27 @@ import { mockMovies } from '../data/movies';
 import { useState } from 'react';
 import { Modal } from '../commons/modal';
 
-
 export const MoviesList = () => {
-
   const GoBack = () => {
     window.history.back();
   };
- const handleClick = () => {alert('삭제되었습니다.');
+  const handleClick = () => {
+    alert('삭제되었습니다.');
     window.location.href = '/movies';
-  }
-  const movieSearch = () => { alert('검색되었습니다.'); }
+  };
+  const movieSearch = () => {
+    alert('검색되었습니다.');
+  };
 
- const [showModal, setShowModal] = useState(false);
-
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <div>
       <Button
         type='button'
-        className='absolute top-2 right-2 bg-gray-500 p-2 rounded' onClick={GoBack}>
+        className='absolute top-2 right-2 bg-gray-500 p-2 rounded'
+        onClick={GoBack}
+      >
         이전화면
       </Button>
       <form className='flex flex-col gap-4 p-4 m-30 max-w-md mx-auto'>
@@ -47,7 +49,8 @@ export const MoviesList = () => {
         />
         <Button
           type='button'
-          className=' top-2 right-2 bg-gray-500 p-2 rounded'onClick={movieSearch}
+          className=' top-2 right-2 bg-gray-500 p-2 rounded'
+          onClick={movieSearch}
         >
           검색
         </Button>
@@ -59,18 +62,24 @@ export const MoviesList = () => {
         <span className='w-1/4 flex items-center justify-center'>개봉일</span>
         <span className='w-1/4 flex items-center justify-center'>관리</span>
       </div>
-      
+
       {mockMovies.map((movie) => (
-        <div 
-          key={movie.movieId}
+        <div
+          key={movie.id}
           className='flex w-full h-20 bg-gray-300 border border-black'
         >
           {/* 각 span에 너비 25%씩 할당 */}
-          <span className='w-1/4 flex items-center justify-center'>{movie.title}</span>
-          <span className='w-1/4 flex items-center justify-center'>{movie.director}</span>
-          <span className='w-1/4 flex items-center justify-center'>{movie.releaseDate}</span>
+          <span className='w-1/4 flex items-center justify-center'>
+            {movie.title}
+          </span>
+          <span className='w-1/4 flex items-center justify-center'>
+            {movie.director}
+          </span>
+          <span className='w-1/4 flex items-center justify-center'>
+            {movie.releaseDate}
+          </span>
           <span className='w-1/4 flex gap-1 items-center justify-center'>
-            <Link to={`/edit/${movie.movieId}`} state={movie}>
+            <Link to={`/edit/${movie.id}`} state={movie}>
               <Button
                 type='button'
                 className='bg-blue-500 w-20 h-16 p-2 rounded'
@@ -78,19 +87,23 @@ export const MoviesList = () => {
                 수정
               </Button>
             </Link>
-            <Button type='button' className='bg-gray-500 w-20 h-16 p-2 rounded' onClick={() => setShowModal(true)}>
+            <Button
+              type='button'
+              className='bg-gray-500 w-20 h-16 p-2 rounded'
+              onClick={() => setShowModal(true)}
+            >
               영화
               <br />
               삭제
             </Button>
             {showModal && (
-        <Modal onClose={() => setShowModal(false)}>
-          <div>삭제하시겠습니까?</div>
-          <Button type='button' className='w-1/2' onClick={handleClick}>
-              삭제
-          </Button>
-        </Modal>
-      )}
+              <Modal onClose={() => setShowModal(false)}>
+                <div>삭제하시겠습니까?</div>
+                <Button type='button' className='w-1/2' onClick={handleClick}>
+                  삭제
+                </Button>
+              </Modal>
+            )}
           </span>
         </div>
       ))}

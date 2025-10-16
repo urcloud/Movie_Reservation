@@ -39,17 +39,17 @@ export const Home = () => {
         </div>
 
         {/* 탭 영역 */}
-      <div className="grid grid-cols-3 text-center my-4">
-        {Object.keys(tabData).map((key) => (
-          <span
-            key={key}
-            className={`cursor-pointer py-2 ${activeTab === key ? 'font-bold border-b-2 border-blue-500' : ''}`}
-            onClick={() => setActiveTab(key)}
-          >
-            {tabNameMap[key]}
-          </span>
-        ))}
-      </div>
+        <div className='grid grid-cols-3 text-center my-4'>
+          {Object.keys(tabData).map((key) => (
+            <span
+              key={key}
+              className={`cursor-pointer py-2 ${activeTab === key ? 'font-bold border-b-2 border-blue-500' : ''}`}
+              onClick={() => setActiveTab(key)}
+            >
+              {tabNameMap[key]}
+            </span>
+          ))}
+        </div>
 
         {/* 영화 카드 리스트 */}
         <div className='grid grid-cols-1 gap-4'>
@@ -69,7 +69,7 @@ export const Home = () => {
                 <p className='mb-1'>장르: {movie.genre}</p>
                 <p className='mb-1'>{movie.description}</p>
                 <p className='mb-1'>감독: {movie.director}</p>
-                <p className='mb-1'>주연: {movie.cast}</p>
+                <p className='mb-1'>주연: {movie.mainActor}</p>
               </div>
             </div>
           ))}
