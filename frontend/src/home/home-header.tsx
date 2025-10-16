@@ -33,7 +33,7 @@ export const HomeHeader = () => {
           <Link to='/login'>
             <span className='hover:underline'>로그인/회원가입</span>
           </Link>
-          <Link to='/reservations'>
+          <Link to='/guest-reservations'>
             <span className='hover:underline'>예매내역조회</span>
           </Link>
         </nav>
