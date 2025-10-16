@@ -1,5 +1,7 @@
 import { Button } from '../commons/button';
 import { Input } from '../commons/input';
+import { useState } from 'react';
+import { Modal } from '../commons/modal';
 
 export const MovieEdit = () => {
       const GoBack = () => {
@@ -8,7 +10,10 @@ export const MovieEdit = () => {
    const handleClick = () => {alert('삭제되었습니다.');
     window.location.href = '/movies';
   }
-  const [movie] = history.state ? [history.state] : [{title:'',director:'',mainActor:'',releaseDate:'',closeDate:'',runningTime:'',viewingAge:'',genre:'',description:''}];
+  const [movie] = history.state ? [history.state] : [{movie:''}];
+
+   const [showModal, setShowModal] = useState(false);
+  
     return (
         
         <div>
@@ -24,16 +29,24 @@ export const MovieEdit = () => {
             <Input type="number" className='border border-gray-300' defaultValue={movie.runningTime} />
             <Input type="number" className='border border-gray-300' defaultValue={movie.viewingAge} />
             <Input type="text" className='border border-gray-300' defaultValue={movie.genre} />
-            <Input type="text" className='border border-gray-300' defaultValue={movie.description} />
+            <Input type="text" className='border border-gray-300 h-100' defaultValue={movie.description} />
 
             <h1 className="text-xl font-bold mt-4">포스터 이미지 업로드</h1> <Input type="file" />
 
                 <Button type="submit" className = "bg-gray-500 p-2 rounded">
                     수정
                 </Button>
-                <Button type='button' className = "bg-gray-500 p-2 rounded" onClick={handleClick}>
+                <Button type='button' className = "bg-gray-500 p-2 rounded" onClick={() => setShowModal(true)}>
                     영화 삭제
                 </Button>
+                {showModal && (
+        <Modal onClose={() => setShowModal(false)}>
+          <div>삭제하시겠습니까?</div>
+          <Button type='button' className='w-1/2' onClick={handleClick}>
+              삭제
+          </Button>
+        </Modal>
+      )}
         </form>
         </div>
 

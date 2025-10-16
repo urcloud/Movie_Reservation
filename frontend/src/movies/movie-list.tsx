@@ -2,6 +2,9 @@ import { Link } from 'wouter';
 import { Button } from '../commons/button';
 import { Input } from '../commons/input';
 import { mockMovies } from '../data/movies';
+import { useState } from 'react';
+import { Modal } from '../commons/modal';
+
 
 export const MoviesList = () => {
 
@@ -12,6 +15,10 @@ export const MoviesList = () => {
     window.location.href = '/movies';
   }
   const movieSearch = () => { alert('검색되었습니다.'); }
+
+ const [showModal, setShowModal] = useState(false);
+
+
   return (
     <div>
       <Button
@@ -71,11 +78,19 @@ export const MoviesList = () => {
                 수정
               </Button>
             </Link>
-            <Button type='button' className='bg-gray-500 w-20 h-16 p-2 rounded' onClick={handleClick}>
+            <Button type='button' className='bg-gray-500 w-20 h-16 p-2 rounded' onClick={() => setShowModal(true)}>
               영화
               <br />
               삭제
             </Button>
+            {showModal && (
+        <Modal onClose={() => setShowModal(false)}>
+          <div>삭제하시겠습니까?</div>
+          <Button type='button' className='w-1/2' onClick={handleClick}>
+              삭제
+          </Button>
+        </Modal>
+      )}
           </span>
         </div>
       ))}
