@@ -7,6 +7,8 @@ import { AppLayout } from './layouts/app-layout';
 import { GuestBooking } from './booking/guest-booking';
 import { BookingDetail } from './booking/booking-detail';
 
+import { LoginForm } from './pages/login';
+import { SignupForm } from './pages/signup';
 export const AppRouter = () => {
   return (
     <Router>
@@ -34,6 +36,8 @@ export const AppRouter = () => {
           <Route path={'/guest-reservations/:id'}>
             {(params) => <BookingDetail id={params.id} />}
           </Route>
+          <Route path={'/login'} component={LoginForm} />
+          <Route path={'/signup'} component={SignupForm} />
         </Switch>
       </AppLayout>
     </Router>
