@@ -17,6 +17,8 @@ import { TheaterList } from './theaters/theaters-list';
 import { TheaterRegister } from './theaters/theater-register';
 import { TheaterEdit } from './theaters/theater-edit';
 import { TheaterDetail } from './theaters/theater-detail';
+import { MovieListPage } from './movielist/movielistpage';
+import { MovieDetailPage } from './movielist/movielist-detail';
 
 export const AppRouter = () => {
   return (
@@ -72,6 +74,12 @@ export const AppRouter = () => {
           </Route>
           <Route path={'/login'} component={LoginForm} />
           <Route path={'/signup'} component={SignupForm} />
+          <Route path={'/movielist'}>
+            <MovieListPage />
+          </Route>
+          <Route path={'/movielist/:id'}>
+            {(params) => <MovieDetailPage id={params.id} />}
+          </Route>
         </Switch>
       </AppLayout>
     </Router>
