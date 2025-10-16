@@ -11,7 +11,7 @@ export const MoviesList = () => {
  const handleClick = () => {alert('삭제되었습니다.');
     window.location.href = '/movies';
   }
-
+  const movieSearch = () => { alert('검색되었습니다.'); }
   return (
     <div>
       <Button
@@ -40,7 +40,7 @@ export const MoviesList = () => {
         />
         <Button
           type='button'
-          className=' top-2 right-2 bg-gray-500 p-2 rounded'
+          className=' top-2 right-2 bg-gray-500 p-2 rounded'onClick={movieSearch}
         >
           검색
         </Button>
@@ -56,14 +56,14 @@ export const MoviesList = () => {
       {mockMovies.map((movie) => (
         <div 
           key={movie.movieId}
-          className='flex w-full h-20 mt-0.5 bg-gray-300 border border-black'
+          className='flex w-full h-20 bg-gray-300 border border-black'
         >
-          {/* 각 span에 고정 너비 25%씩 할당 */}
+          {/* 각 span에 너비 25%씩 할당 */}
           <span className='w-1/4 flex items-center justify-center'>{movie.title}</span>
           <span className='w-1/4 flex items-center justify-center'>{movie.director}</span>
           <span className='w-1/4 flex items-center justify-center'>{movie.releaseDate}</span>
           <span className='w-1/4 flex gap-1 items-center justify-center'>
-            <Link to={`/edit/${movie.movieId}`}>
+            <Link to={`/edit/${movie.movieId}`} state={movie}>
               <Button
                 type='button'
                 className='bg-blue-500 w-20 h-16 p-2 rounded'
