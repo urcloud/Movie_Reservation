@@ -22,7 +22,7 @@ export const MemberReservDetail = ({ id }: Props) => {
   return (
     <ReservDetailView
       Reserv={data}
-      backTo="/guest-Reservs"
+      backTo="/mem-Reservations"
       title="예매 상세"
     />
   );
