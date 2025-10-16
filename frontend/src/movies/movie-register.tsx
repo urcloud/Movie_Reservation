@@ -2,12 +2,18 @@ import { Button } from '../commons/button';
 import { Input } from '../commons/input';
 
 export const MovieRegister = () => {
+      const GoBack = () => {
+    window.history.back();
+  }
+
+  const handleClick = () => {alert('등록되었습니다.');
+    window.location.href = '/movies';
+  }
   return (
     <div>
       <Button
         type='button'
-        className='absolute top-2 right-2 bg-gray-500 p-2 rounded'
-      >
+        className='absolute top-2 right-2 bg-gray-500 p-2 rounded' onClick={GoBack}>
         이전화면
       </Button>
       <form className='flex flex-col mt-20 gap-4 p-4 max-w-md mx-auto'>
@@ -58,7 +64,7 @@ export const MovieRegister = () => {
         />
         <h1 className='mt-4'>포스터 이미지 업로드</h1>{' '}
         <Input type='file' className='border border-gray-300' />
-        <Button type='submit' className='bg-gray-500 p-2 rounded'>
+        <Button type='submit' className='bg-gray-500 p-2 rounded' onClick={handleClick}>
           등록
         </Button>
       </form>

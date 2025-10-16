@@ -26,7 +26,7 @@ export const AppRouter = () => {
               <Route path={'/'}>
                 <MoviesList />
               </Route>
-              <Route path={'/edit'}>
+              <Route path={'/edit/:id'}>
                 <MovieEdit />
               </Route>
               <Route path={'/register'}>
