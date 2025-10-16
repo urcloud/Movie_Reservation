@@ -8,6 +8,9 @@ export const MoviesList = () => {
   const GoBack = () => {
     window.history.back();
   };
+ const handleClick = () => {alert('삭제되었습니다.');
+    window.location.href = '/movies';
+  }
 
   return (
     <div>
@@ -43,21 +46,23 @@ export const MoviesList = () => {
         </Button>
       </form>
 
-     
+      <div className='flex w-full h-12 mt-4 bg-gray-400 border border-black font-bold'>
+        <span className='w-1/4 flex items-center justify-center'>제목</span>
+        <span className='w-1/4 flex items-center justify-center'>감독</span>
+        <span className='w-1/4 flex items-center justify-center'>개봉일</span>
+        <span className='w-1/4 flex items-center justify-center'>관리</span>
+      </div>
+      
       {mockMovies.map((movie) => (
         <div 
           key={movie.movieId}
-          className='flex justify-evenly w-full h-20 mt-0.5 bg-gray-300 border border-black'
+          className='flex w-full h-20 mt-0.5 bg-gray-300 border border-black'
         >
-          <span className='flex items-center justify-center'>{movie.title}</span>
-          <span className='flex items-center justify-center'>
-            {movie.director}
-          </span>
-          <span className='flex items-center justify-center'>
-            {movie.releaseDate}
-          </span>
-          <span className='flex gap-1 items-center'>
-            {/* 수정 페이지로 이동 시 영화 ID를 함께 전달 */}
+          {/* 각 span에 고정 너비 25%씩 할당 */}
+          <span className='w-1/4 flex items-center justify-center'>{movie.title}</span>
+          <span className='w-1/4 flex items-center justify-center'>{movie.director}</span>
+          <span className='w-1/4 flex items-center justify-center'>{movie.releaseDate}</span>
+          <span className='w-1/4 flex gap-1 items-center justify-center'>
             <Link to={`/edit/${movie.movieId}`}>
               <Button
                 type='button'
@@ -66,7 +71,7 @@ export const MoviesList = () => {
                 수정
               </Button>
             </Link>
-            <Button type='button' className='bg-gray-500 w-20 h-16 p-2 rounded'>
+            <Button type='button' className='bg-gray-500 w-20 h-16 p-2 rounded' onClick={handleClick}>
               영화
               <br />
               삭제
@@ -74,7 +79,6 @@ export const MoviesList = () => {
           </span>
         </div>
       ))}
-      
     </div>
   );
 };

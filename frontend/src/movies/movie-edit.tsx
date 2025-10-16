@@ -5,6 +5,9 @@ export const MovieEdit = () => {
       const GoBack = () => {
     window.history.back();
   };
+   const handleClick = () => {alert('삭제되었습니다.');
+    window.location.href = '/movies';
+  }
     return (
         
         <div>
@@ -27,7 +30,7 @@ export const MovieEdit = () => {
                 <Button type="submit" className = "bg-gray-500 p-2 rounded">
                     수정
                 </Button>
-                <Button type='button' className = "bg-gray-500 p-2 rounded">
+                <Button type='button' className = "bg-gray-500 p-2 rounded" onClick={handleClick}>
                     영화 삭제
                 </Button>
         </form>

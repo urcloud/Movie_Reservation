@@ -5,6 +5,10 @@ export const MovieRegister = () => {
       const GoBack = () => {
     window.history.back();
   }
+
+  const handleClick = () => {alert('등록되었습니다.');
+    window.location.href = '/movies';
+  }
   return (
     <div>
       <Button
@@ -60,7 +64,7 @@ export const MovieRegister = () => {
         />
         <h1 className='mt-4'>포스터 이미지 업로드</h1>{' '}
         <Input type='file' className='border border-gray-300' />
-        <Button type='submit' className='bg-gray-500 p-2 rounded'>
+        <Button type='submit' className='bg-gray-500 p-2 rounded' onClick={handleClick}>
           등록
         </Button>
       </form>
