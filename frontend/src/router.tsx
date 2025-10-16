@@ -12,6 +12,12 @@ import { MemberReservDetail } from './reservations/mem-res-detail';
 
 import { LoginForm } from './pages/login';
 import { SignupForm } from './pages/signup';
+
+import { TheaterList } from './theaters/theaters-list';
+import { TheaterRegister } from './theaters/theater-register';
+import { TheaterEdit } from './theaters/theater-edit';
+import { TheaterDetail } from './theaters/theater-detail';
+
 export const AppRouter = () => {
   return (
     <Router>
@@ -33,6 +39,22 @@ export const AppRouter = () => {
               </Route>
               <Route path={'/register'}>
                 <MovieRegister />
+              </Route>
+            </Switch>
+          </Route>
+          <Route path='/theaters' nest>
+            <Switch>
+              <Route path='/'>
+                <TheaterList />
+              </Route>
+              <Route path='/register'>
+                <TheaterRegister />
+              </Route>
+              <Route path='/edit/:id'>
+                <TheaterEdit />
+              </Route>
+              <Route path='/:id'>
+                <TheaterDetail />
               </Route>
             </Switch>
           </Route>
