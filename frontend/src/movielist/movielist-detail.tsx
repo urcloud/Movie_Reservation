@@ -64,11 +64,11 @@ export const MovieDetailPage = ({ id }: Props) => {
     return (
       <PageLayout>
         <ContentLayout>
-          <div className="text-center text-red-500 mt-10">
+          <div className='text-center text-red-500 mt-10'>
             ❌ 해당 영화를 찾을 수 없습니다.
           </div>
-          <Link to="/movies">
-            <Button className="mt-4 bg-gray-500 text-white">목록으로</Button>
+          <Link to='/movies'>
+            <Button className='mt-4 bg-gray-500 text-white'>목록으로</Button>
           </Link>
         </ContentLayout>
       </PageLayout>
@@ -78,33 +78,47 @@ export const MovieDetailPage = ({ id }: Props) => {
   return (
     <PageLayout>
       <ContentLayout>
-        <div className="flex justify-between items-center mb-6">
-          <Link to="/movies">
-            <Button className="bg-gray-500 text-white px-4 py-2 rounded">
+        <div className='flex justify-between items-center mb-6'>
+          <Link to='/movies'>
+            <Button className='bg-gray-500 text-white px-4 py-2 rounded'>
               목록으로
             </Button>
           </Link>
-          <h1 className="text-2xl font-bold">{movie.title}</h1>
+          <h1 className='text-2xl font-bold'>{movie.title}</h1>
         </div>
 
-        <div className="flex gap-6">
+        <div className='flex gap-6'>
           {/* 왼쪽 포스터 */}
-          <div className="w-1/3 h-[400px] bg-gray-300 flex items-center justify-center">
-            <span className="text-gray-600">No Image</span>
+          <div className='w-1/3 h-[400px] bg-gray-300 flex items-center justify-center'>
+            <span className='text-gray-600'>No Image</span>
           </div>
 
           {/* 오른쪽 상세 정보 */}
-          <div className="flex-1 flex flex-col gap-2 text-gray-800">
-            <p><strong>장르:</strong> {movie.genre}</p>
-            <p><strong>감독:</strong> {movie.director}</p>
-            <p><strong>주연:</strong> {movie.cast}</p>
-            <p><strong>개봉일:</strong> {movie.releaseDate}</p>
-            <p><strong>러닝타임:</strong> {movie.runningTime}</p>
-            <p><strong>관람등급:</strong> {movie.rating}</p>
-            <p className="mt-4 text-gray-700 leading-relaxed">{movie.description}</p>
+          <div className='flex-1 flex flex-col gap-2 text-gray-800'>
+            <p>
+              <strong>장르:</strong> {movie.genre}
+            </p>
+            <p>
+              <strong>감독:</strong> {movie.director}
+            </p>
+            <p>
+              <strong>주연:</strong> {movie.cast}
+            </p>
+            <p>
+              <strong>개봉일:</strong> {movie.releaseDate}
+            </p>
+            <p>
+              <strong>러닝타임:</strong> {movie.runningTime}
+            </p>
+            <p>
+              <strong>관람등급:</strong> {movie.rating}
+            </p>
+            <p className='mt-4 text-gray-700 leading-relaxed'>
+              {movie.description}
+            </p>
 
             <Link to={`/booking/${movie.id}`}>
-              <Button className="mt-6 bg-blue-500 text-white px-4 py-2 rounded">
+              <Button className='mt-6 bg-blue-500 text-white px-4 py-2 rounded'>
                 예매하기
               </Button>
             </Link>
