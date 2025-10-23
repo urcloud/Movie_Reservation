@@ -19,12 +19,15 @@ import { TheaterEdit } from './theaters/theater-edit';
 import { TheaterDetail } from './theaters/theater-detail';
 import { MovieListPage } from './movielist/movielistpage';
 import { MovieDetailPage } from './movielist/movielist-detail';
+import { HomeHeader } from './home/home-header';
 
 export const AppRouter = () => {
   return (
     <Router>
       <AppLayout>
         <Switch>
+          <>
+          <HomeHeader />
           <Route path={'/'}>
             <Home />
           </Route>
@@ -80,6 +83,7 @@ export const AppRouter = () => {
           <Route path={'/movielist/:id'}>
             {(params) => <MovieDetailPage id={params.id} />}
           </Route>
+          </>
         </Switch>
       </AppLayout>
     </Router>
