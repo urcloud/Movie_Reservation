@@ -19,6 +19,9 @@ export function LoginForm() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleClick = () => {
+    return setLocation("/signup")
+  }
   const handleSubmit= (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
@@ -57,11 +60,12 @@ export function LoginForm() {
           {errorMsg && <p className="text-red-500 text-sm">{errorMsg}</p>}
           <Button
           type="submit"
-          className="w-full bg-primary text-white py-2 rounded hover:bg-blue-300"
+          className="w-full bg-blue-400 text-white py-2 rounded hover:bg-primary"
           >
           로그인
           </Button>
         </form>
+          <Button className="w-full pr-3 text-xs text-right text-gray-600 hover:text-black" onClick={handleClick}>회원가입</Button>
       </div>
     </div>
   );
