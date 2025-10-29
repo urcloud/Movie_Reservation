@@ -7,7 +7,7 @@ import { AppLayout } from './layouts/app-layout';
 import { GuestReserv } from './reservations/guest-reservation';
 import { GuestReservDetail } from './reservations/guest-res-detail';
 import { Admin } from './admin/admin-page';
-import { MemberResrv } from './reservations/mem-reservation'; // (예) src/app-layout.tsx
+import { MemberResrv } from './reservations/mem-reservation';
 import { MemberReservDetail } from './reservations/mem-res-detail';
 
 import { LoginForm } from './pages/login';
@@ -19,6 +19,8 @@ import { TheaterEdit } from './theaters/theater-edit';
 import { TheaterDetail } from './theaters/theater-detail';
 import { MovieListPage } from './movielist/movielistpage';
 import { MovieDetailPage } from './movielist/movielist-detail';
+import { MovieReservation } from './reservations/movie-reservation';
+import { MoviePayment } from './reservations/movie-payment';
 
 export const AppRouter = () => {
   return (
@@ -79,6 +81,12 @@ export const AppRouter = () => {
           </Route>
           <Route path={'/movielist/:id'}>
             {(params) => <MovieDetailPage id={params.id} />}
+          </Route>
+          <Route path={'/booking/:id'}>
+            <MovieReservation />
+          </Route>
+          <Route path='/booking/:id/payment'>
+            <MoviePayment />
           </Route>
         </Switch>
       </AppLayout>

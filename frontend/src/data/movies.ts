@@ -146,6 +146,7 @@ export const tabData: Record<string, Movie[]> = {
   ],
 };
 
+
 export const mockMovies: Movie[] = [
   {
     id: 1,
