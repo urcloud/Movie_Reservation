@@ -5,14 +5,17 @@ import { ContentLayout } from "../layouts/content-layout";
 import { Button } from "../commons/button";
 import { mockMovies } from "../data/movies";
 import { mockScreenings } from "../data/screenings";
+import { mockSeats } from "../data/seats";
+import { mockScreeningSeats } from "../data/screeningSeats";
 import type { Movie } from "../models/movie";
 import type { Screening } from "../models/screening";
 
 export const MoviePayment = () => {
-  const { id } = useParams<{ id: string }>(); // screeningId
+  const { id } = useParams<{ id: string }>();
   const [movie, setMovie] = useState<Movie | null>(null);
   const [screening, setScreening] = useState<Screening | null>(null);
   const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
+  const [seatNumbers, setSeatNumbers] = useState<string[]>([]);
   const [email, setEmail] = useState("");
 
   useEffect(() => {
@@ -32,13 +35,26 @@ export const MoviePayment = () => {
     }
   }, [id]);
 
+  // 선택된 screeningSeatId를 seatNumber로 변환
+  useEffect(() => {
+    const numbers = selectedSeats.map((screeningSeatId) => {
+      const screeningSeat = mockScreeningSeats.find(
+        (s) => s.screeningSeatId === screeningSeatId
+      );
+      if (!screeningSeat) return screeningSeatId.toString();
+      const seat = mockSeats.find((s) => s.seatId === screeningSeat.seatId);
+      return seat?.seatNumber || screeningSeat.seatId.toString();
+    });
+    setSeatNumbers(numbers);
+  }, [selectedSeats]);
+
   const handleReservation = () => {
     if (!email) {
       alert("이메일을 입력해주세요.");
       return;
     }
     alert(
-      `예매 완료!\n영화: ${movie?.title}\n상영관: ${screening?.theaterId}관\n좌석: ${selectedSeats.join(
+      `예매 완료!\n영화: ${movie?.title}\n상영관: ${screening?.theaterId}관\n좌석: ${seatNumbers.join(
         ", "
       )}`
     );
@@ -71,7 +87,7 @@ export const MoviePayment = () => {
             <p>
               상영 시간: {screening.startTime} ~ {screening.endTime}
             </p>
-            <p>선택 좌석: {selectedSeats.join(", ")}</p>
+            <p>선택 좌석: {seatNumbers.join(", ")}</p>
             <p>
               총 금액: {(selectedSeats.length * screening.ticketPrice).toLocaleString()}원
             </p>

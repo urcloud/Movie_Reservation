@@ -6,6 +6,7 @@ import { Button } from "../commons/button";
 import { mockScreenings } from "../data/screenings";
 import { mockTheaters } from "../data/theaters";
 import { mockScreeningSeats } from "../data/screeningSeats";
+import { mockSeats } from "../data/seats"; // Seat 정보
 import type { Screening } from "../models/screening";
 import type { ScreeningSeat } from "../models/screeningSeat";
 import type { Theater } from "../models/theater";
@@ -23,9 +24,7 @@ export const MovieReservation = () => {
 
   // 해당 영화의 상영 목록만 필터링
   useEffect(() => {
-    const filtered = mockScreenings.filter(
-      (s) => s.movieId === Number(id)
-    );
+    const filtered = mockScreenings.filter((s) => s.movieId === Number(id));
     setScreenings(filtered);
   }, [id]);
 
@@ -45,11 +44,11 @@ export const MovieReservation = () => {
     setShowSeats(true);
   };
 
-  const toggleSeatSelection = (seatId: number) => {
+  const toggleSeatSelection = (screeningSeatId: number) => {
     setSelectedSeats((prev) =>
-      prev.includes(seatId)
-        ? prev.filter((id) => id !== seatId)
-        : [...prev, seatId]
+      prev.includes(screeningSeatId)
+        ? prev.filter((id) => id !== screeningSeatId)
+        : [...prev, screeningSeatId]
     );
   };
 
@@ -87,8 +86,7 @@ export const MovieReservation = () => {
               >
                 <div>
                   <p>
-                    상영일:{" "}
-                    <strong>{s.screeningDate.toLocaleDateString()}</strong>
+                    상영일: <strong>{s.screeningDate.toLocaleDateString()}</strong>
                   </p>
                   <p>
                     시간: {s.startTime} ~ {s.endTime}
@@ -118,25 +116,43 @@ export const MovieReservation = () => {
             </div>
 
             {/* 좌석 구역 */}
-            <div className="grid grid-cols-8 gap-2 justify-center">
-              {seatLayout.map((seat) => (
-                <button
-                  key={seat.seatId}
-                  onClick={() => toggleSeatSelection(seat.seatId)}
-                  disabled={seat.isReserved}
-                  className={`w-8 h-8 rounded text-xs font-medium flex items-center justify-center
-                    ${
-                      seat.isReserved
-                        ? "bg-red-600 text-white cursor-not-allowed"
-                        : selectedSeats.includes(seat.seatId)
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-300 text-black"
-                    }`}
-                >
-                  {seat.seatId}
-                </button>
-              ))}
-            </div>
+<div className="flex flex-col items-center justify-center mt-4">
+  {Array.from({ length: theater.seatRow }).map((_, rowIdx) => (
+    <div key={rowIdx} className="flex gap-2 mb-2">
+      {Array.from({ length: theater.seatCol }).map((_, colIdx) => {
+        // 좌석 번호를 row-col 기준으로 계산 (예: A1, A2, B1, B2)
+        const seatIndex = rowIdx * theater.seatCol + colIdx;
+        const screeningSeat = seatLayout[seatIndex];
+
+        if (!screeningSeat) return <div key={colIdx} className="w-8 h-8" />;
+
+        const seatInfo = mockSeats.find(
+          (s) => s.seatId === screeningSeat.seatId
+        );
+
+        const seatLabel = seatInfo?.seatNumber || screeningSeat.seatId;
+
+        return (
+          <button
+            key={screeningSeat.screeningSeatId}
+            onClick={() => toggleSeatSelection(screeningSeat.screeningSeatId)}
+            disabled={screeningSeat.isReserved}
+            className={`w-8 h-8 rounded text-xs font-medium flex items-center justify-center
+              ${
+                screeningSeat.isReserved
+                  ? "bg-red-600 text-white cursor-not-allowed"
+                  : selectedSeats.includes(screeningSeat.screeningSeatId)
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-300 text-black"
+              }`}
+          >
+            {seatLabel}
+          </button>
+        );
+      })}
+    </div>
+  ))}
+</div>
 
             {/* 안내 색상 */}
             <div className="flex justify-center space-x-6 mt-6 text-sm">
