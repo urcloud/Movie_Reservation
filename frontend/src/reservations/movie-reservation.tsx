@@ -6,13 +6,13 @@ import { Button } from "../commons/button";
 import { mockScreenings } from "../data/screenings";
 import { mockTheaters } from "../data/theaters";
 import { mockScreeningSeats } from "../data/screeningSeats";
-import { mockSeats } from "../data/seats"; // Seat 정보
+import { mockSeats } from "../data/seats";
 import type { Screening } from "../models/screening";
 import type { ScreeningSeat } from "../models/screeningSeat";
 import type { Theater } from "../models/theater";
 
 export const MovieReservation = () => {
-  const { id } = useParams<{ id: string }>(); // movieId
+  const { id } = useParams<{ id: string }>();
   const [, navigate] = useLocation();
 
   const [screenings, setScreenings] = useState<Screening[]>([]);
@@ -115,44 +115,57 @@ export const MovieReservation = () => {
               스크린
             </div>
 
-            {/* 좌석 구역 */}
-<div className="flex flex-col items-center justify-center mt-4">
-  {Array.from({ length: theater.seatRow }).map((_, rowIdx) => (
-    <div key={rowIdx} className="flex gap-2 mb-2">
-      {Array.from({ length: theater.seatCol }).map((_, colIdx) => {
-        // 좌석 번호를 row-col 기준으로 계산 (예: A1, A2, B1, B2)
-        const seatIndex = rowIdx * theater.seatCol + colIdx;
-        const screeningSeat = seatLayout[seatIndex];
+            {/* 좌석 구역 3등분 배치 */}
+            <div className="flex flex-col items-center justify-center mt-4 w-full">
+              {Array.from({ length: theater.seatRow }).map((_, rowIdx) => {
+                const rowSeats = seatLayout.slice(
+                  rowIdx * theater.seatCol,
+                  (rowIdx + 1) * theater.seatCol
+                );
 
-        if (!screeningSeat) return <div key={colIdx} className="w-8 h-8" />;
+                const totalCols = rowSeats.length;
+                const third = Math.floor(totalCols / 3);
+                const remainder = totalCols % 3;
 
-        const seatInfo = mockSeats.find(
-          (s) => s.seatId === screeningSeat.seatId
-        );
+                const leftCount = third;
+                const centerCount = third + remainder;
 
-        const seatLabel = seatInfo?.seatNumber || screeningSeat.seatId;
+                const leftSeats = rowSeats.slice(0, leftCount);
+                const centerSeats = rowSeats.slice(leftCount, leftCount + centerCount);
+                const rightSeats = rowSeats.slice(leftCount + centerCount);
 
-        return (
-          <button
-            key={screeningSeat.screeningSeatId}
-            onClick={() => toggleSeatSelection(screeningSeat.screeningSeatId)}
-            disabled={screeningSeat.isReserved}
-            className={`w-8 h-8 rounded text-xs font-medium flex items-center justify-center
-              ${
-                screeningSeat.isReserved
-                  ? "bg-red-600 text-white cursor-not-allowed"
-                  : selectedSeats.includes(screeningSeat.screeningSeatId)
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-300 text-black"
-              }`}
-          >
-            {seatLabel}
-          </button>
-        );
-      })}
-    </div>
-  ))}
-</div>
+                const renderSeat = (screeningSeat: ScreeningSeat) => {
+                  const seatInfo = mockSeats.find((s) => s.seatId === screeningSeat.seatId);
+                  const seatLabel = seatInfo?.seatNumber || screeningSeat.seatId;
+
+                  return (
+                    <button
+                      key={screeningSeat.screeningSeatId}
+                      onClick={() => toggleSeatSelection(screeningSeat.screeningSeatId)}
+                      disabled={screeningSeat.isReserved}
+                      className={`w-8 h-8 rounded text-xs font-medium flex items-center justify-center
+                        ${
+                          screeningSeat.isReserved
+                            ? "bg-red-600 text-white cursor-not-allowed"
+                            : selectedSeats.includes(screeningSeat.screeningSeatId)
+                            ? "bg-blue-500 text-white"
+                            : "bg-gray-300 text-black"
+                        }`}
+                    >
+                      {seatLabel}
+                    </button>
+                  );
+                };
+
+                return (
+                  <div key={rowIdx} className="flex w-full justify-between mb-2">
+                    <div className="flex gap-2">{leftSeats.map(renderSeat)}</div>
+                    <div className="flex gap-2 justify-center">{centerSeats.map(renderSeat)}</div>
+                    <div className="flex gap-2">{rightSeats.map(renderSeat)}</div>
+                  </div>
+                );
+              })}
+            </div>
 
             {/* 안내 색상 */}
             <div className="flex justify-center space-x-6 mt-6 text-sm">
