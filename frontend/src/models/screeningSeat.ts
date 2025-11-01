@@ -1,5 +1,7 @@
 export interface ScreeningSeat {
-  seatId: number;
+  screeningSeatId: number;
   screeningId: number;
+  seatId: number;
+  theaterId: number;
   isReserved: boolean;
 }

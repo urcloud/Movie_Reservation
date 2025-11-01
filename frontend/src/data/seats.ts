@@ -1,33 +1,30 @@
-export const mockScreeningSeat = [
-  { seatId: 1, screeningId: 1, isReserved: false },
-  { seatId: 2, screeningId: 1, isReserved: true },
-  { seatId: 3, screeningId: 1, isReserved: false },
-  { seatId: 4, screeningId: 1, isReserved: false },
-  { seatId: 5, screeningId: 1, isReserved: false },
-  { seatId: 6, screeningId: 1, isReserved: true },
-  { seatId: 7, screeningId: 1, isReserved: false },
-  { seatId: 8, screeningId: 1, isReserved: true },
-  { seatId: 9, screeningId: 1, isReserved: false },
-  { seatId: 10, screeningId: 1, isReserved: false },
-  { seatId: 11, screeningId: 1, isReserved: false },
-  { seatId: 12, screeningId: 1, isReserved: true },
-  { seatId: 13, screeningId: 1, isReserved: false },
-  { seatId: 14, screeningId: 1, isReserved: true },
-  { seatId: 15, screeningId: 1, isReserved: false },
-  { seatId: 16, screeningId: 1, isReserved: false },
-  { seatId: 17, screeningId: 1, isReserved: false },
-  { seatId: 18, screeningId: 1, isReserved: true },
-  { seatId: 19, screeningId: 1, isReserved: false },
-  { seatId: 20, screeningId: 1, isReserved: true },
-  { seatId: 21, screeningId: 1, isReserved: false },
-  { seatId: 22, screeningId: 1, isReserved: false },
-  { seatId: 23, screeningId: 1, isReserved: false },
-  { seatId: 24, screeningId: 1, isReserved: true },
-  { seatId: 25, screeningId: 1, isReserved: false },
-  { seatId: 26, screeningId: 1, isReserved: true },
-  { seatId: 27, screeningId: 1, isReserved: false },
-  { seatId: 28, screeningId: 1, isReserved: false },
-  { seatId: 29, screeningId: 1, isReserved: false },
-  { seatId: 30, screeningId: 1, isReserved: true },
-  // 실제로는 상영관의 좌석 수에 맞게 데이터를 받아옴
+import type { Seat } from "../models/seat";
+
+export const mockSeats: Seat[] = [
+  // 1관 (5행 6열)
+  ...Array.from({ length: 5 }, (_, rowIndex) =>
+    Array.from({ length: 6 }, (_, colIndex) => ({
+      seatId: rowIndex * 6 + colIndex + 1,
+      theaterId: 1,
+      seatNumber: `${String.fromCharCode(65 + rowIndex)}${colIndex + 1}`,
+    }))
+  ).flat(),
+
+  // 2관 (5행 8열)
+  ...Array.from({ length: 5 }, (_, rowIndex) =>
+    Array.from({ length: 8 }, (_, colIndex) => ({
+      seatId: 30 + rowIndex * 8 + colIndex + 1,
+      theaterId: 2,
+      seatNumber: `${String.fromCharCode(65 + rowIndex)}${colIndex + 1}`,
+    }))
+  ).flat(),
+
+  // 3관 (4행 5열)
+  ...Array.from({ length: 4 }, (_, rowIndex) =>
+    Array.from({ length: 5 }, (_, colIndex) => ({
+      seatId: 70 + rowIndex * 5 + colIndex + 1,
+      theaterId: 3,
+      seatNumber: `${String.fromCharCode(65 + rowIndex)}${colIndex + 1}`,
+    }))
+  ).flat(),
 ];

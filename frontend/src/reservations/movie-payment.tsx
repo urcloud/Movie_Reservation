@@ -1,44 +1,56 @@
-import { useState, useEffect } from 'react';
-import { useParams } from 'wouter';
-import { PageLayout } from '../layouts/page-layout';
-import { ContentLayout } from '../layouts/content-layout';
-import { Button } from '../commons/button';
-import { mockMovies } from '../data/movies';
-import type { Movie } from '../models/movie';
+import { useState, useEffect } from "react";
+import { useParams } from "wouter";
+import { PageLayout } from "../layouts/page-layout";
+import { ContentLayout } from "../layouts/content-layout";
+import { Button } from "../commons/button";
+import { mockMovies } from "../data/movies";
+import { mockScreenings } from "../data/screenings";
+import type { Movie } from "../models/movie";
+import type { Screening } from "../models/screening";
 
 export const MoviePayment = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>(); // screeningId
   const [movie, setMovie] = useState<Movie | null>(null);
+  const [screening, setScreening] = useState<Screening | null>(null);
   const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
 
-  // localStorage에서 좌석 가져오기
   useEffect(() => {
-    const seats = localStorage.getItem('selectedSeats');
-    if (seats) {
-      setSelectedSeats(JSON.parse(seats));
+    const seats = localStorage.getItem("selectedSeats");
+    if (seats) setSelectedSeats(JSON.parse(seats));
+
+    const foundScreening = mockScreenings.find(
+      (s) => s.screeningId === Number(id)
+    );
+    setScreening(foundScreening || null);
+
+    if (foundScreening) {
+      const foundMovie = mockMovies.find(
+        (m) => m.id === foundScreening.movieId
+      );
+      setMovie(foundMovie || null);
     }
-  }, []);
-
-  // mock 데이터에서 영화 정보 찾기
-  useEffect(() => {
-    const found = mockMovies.find((m) => m.id === Number(id));
-    setMovie(found || null);
   }, [id]);
 
   const handleReservation = () => {
     if (!email) {
-      alert('이메일을 입력해주세요.');
+      alert("이메일을 입력해주세요.");
       return;
     }
-    alert(`예매 완료!\n영화: ${movie?.title}\n좌석: ${selectedSeats.join(', ')}`);
+    alert(
+      `예매 완료!\n영화: ${movie?.title}\n상영관: ${screening?.theaterId}관\n좌석: ${selectedSeats.join(
+        ", "
+      )}`
+    );
   };
 
-  if (!movie) {
+  if (!movie || !screening) {
     return (
       <PageLayout>
         <ContentLayout>
-          <p className="text-center mt-10 text-lg">영화 정보를 불러오는 중입니다...</p>
+          <p className="text-center mt-10 text-lg">
+            예매 정보를 불러오는 중입니다...
+          </p>
         </ContentLayout>
       </PageLayout>
     );
@@ -48,22 +60,26 @@ export const MoviePayment = () => {
     <PageLayout>
       <ContentLayout>
         <div className="max-w-lg mx-auto bg-white shadow-md rounded-lg p-6 mt-10">
-          <h1 className="text-2xl font-bold mb-4">🎬 영화 예매 확인</h1>
+          <h1 className="text-2xl font-bold mb-4">🎟 예매 확인</h1>
 
           <div className="space-y-2 mb-6">
-            <p>영화제목: <strong>{movie.title}</strong></p>
+            <p>
+              영화제목: <strong>{movie.title}</strong>
+            </p>
             <p>장르: {movie.genre}</p>
-            <p>감독: {movie.director}</p>
-            <p>주연: {movie.mainActor}</p>
-            <p>상영 날짜: 2025-11-01</p>
-            <p>상영 시간: 19:30</p>
-            <p>선택 좌석: {selectedSeats.join(', ')}</p>
-            <p>총 금액: {selectedSeats.length * 12000}원</p>
+            <p>상영관: {screening.theaterId}관</p>
+            <p>
+              상영 시간: {screening.startTime} ~ {screening.endTime}
+            </p>
+            <p>선택 좌석: {selectedSeats.join(", ")}</p>
+            <p>
+              총 금액: {(selectedSeats.length * screening.ticketPrice).toLocaleString()}원
+            </p>
           </div>
 
           <div className="mb-4">
             <label className="block mb-2 text-sm font-medium">
-              🎟️ 영화 티켓 발급용 이메일을 입력해주세요 (필수)
+              🎟️ 티켓 발송용 이메일 (필수)
             </label>
             <input
               type="email"
@@ -75,7 +91,9 @@ export const MoviePayment = () => {
           </div>
 
           <div className="flex justify-between items-center mt-6">
-            <p className="text-gray-700 font-medium">선택하셨습니다. 예매하시겠습니까?</p>
+            <p className="text-gray-700 font-medium">
+              예매를 진행하시겠습니까?
+            </p>
             <Button
               className="bg-blue-600 text-white px-6 py-2 rounded"
               onClick={handleReservation}

@@ -1,136 +1,172 @@
-import { useState, useEffect } from 'react';
-import { useParams, useLocation } from 'wouter';
-import { PageLayout } from '../layouts/page-layout';
-import { ContentLayout } from '../layouts/content-layout';
-import { Button } from '../commons/button';
-import { mockScreeningSeat } from '../data/seats';
-import type { ScreeningSeat } from '../models/screeningSeat';
+import { useState, useEffect } from "react";
+import { useParams, useLocation } from "wouter";
+import { PageLayout } from "../layouts/page-layout";
+import { ContentLayout } from "../layouts/content-layout";
+import { Button } from "../commons/button";
+import { mockScreenings } from "../data/screenings";
+import { mockTheaters } from "../data/theaters";
+import { mockScreeningSeats } from "../data/screeningSeats";
+import type { Screening } from "../models/screening";
+import type { ScreeningSeat } from "../models/screeningSeat";
+import type { Theater } from "../models/theater";
 
 export const MovieReservation = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>(); // movieId
   const [, navigate] = useLocation();
-  const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
-  const [seatLayout, setSeatLayout] = useState<ScreeningSeat[]>([]);
-  const [showPopup, setShowPopup] = useState(false);
 
+  const [screenings, setScreenings] = useState<Screening[]>([]);
+  const [selectedScreening, setSelectedScreening] = useState<Screening | null>(null);
+  const [theater, setTheater] = useState<Theater | null>(null);
+  const [seatLayout, setSeatLayout] = useState<ScreeningSeat[]>([]);
+  const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
+  const [showSeats, setShowSeats] = useState(false);
+
+  // 해당 영화의 상영 목록만 필터링
   useEffect(() => {
-    setSeatLayout(mockScreeningSeat);
+    const filtered = mockScreenings.filter(
+      (s) => s.movieId === Number(id)
+    );
+    setScreenings(filtered);
   }, [id]);
 
+  // 상영 선택 시 실행
+  const handleSelectScreening = (screening: Screening) => {
+    setSelectedScreening(screening);
+    const t = mockTheaters.find((t) => t.theaterId === screening.theaterId);
+    setTheater(t || null);
+
+    // 해당 상영관 좌석 가져오기
+    const layout = mockScreeningSeats.filter(
+      (seat) =>
+        seat.theaterId === screening.theaterId &&
+        seat.screeningId === screening.screeningId
+    );
+    setSeatLayout(layout);
+    setShowSeats(true);
+  };
+
   const toggleSeatSelection = (seatId: number) => {
-    setSelectedSeats((prevSeats) =>
-      prevSeats.includes(seatId)
-        ? prevSeats.filter((id) => id !== seatId)
-        : [...prevSeats, seatId]
+    setSelectedSeats((prev) =>
+      prev.includes(seatId)
+        ? prev.filter((id) => id !== seatId)
+        : [...prev, seatId]
     );
   };
 
   const handleBooking = () => {
+    if (!selectedScreening) return;
     if (selectedSeats.length === 0) {
-      alert('좌석을 선택해주세요!');
+      alert("좌석을 선택해주세요!");
       return;
     }
 
-    // 예매 화면으로 좌석 정보 전달 (localStorage 사용)
-    localStorage.setItem(
-      'selectedSeats',
-      JSON.stringify(selectedSeats)
-    );
-    localStorage.setItem('movieId', id);
+    localStorage.setItem("selectedSeats", JSON.stringify(selectedSeats));
+    localStorage.setItem("screeningId", String(selectedScreening.screeningId));
 
-    setShowPopup(false);
-    navigate(`/booking/${id}/payment`); // 예매하기 페이지로 이동
+    navigate(`/booking/${selectedScreening.screeningId}/payment`);
   };
-
-  const sectionSize = Math.floor(seatLayout.length / 3);
-  const leftSeats = seatLayout.slice(0, sectionSize);
-  const centerSeats = seatLayout.slice(sectionSize, sectionSize * 2);
-  const rightSeats = seatLayout.slice(sectionSize * 2);
 
   return (
     <PageLayout>
       <ContentLayout>
-        <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold mb-4">영화 예매</h1>
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-bold mb-4">🎬 영화 예매</h1>
           <p className="text-lg mb-4">영화 번호: {id}</p>
-          <Button
-            className="bg-green-500 text-white px-6 py-2 rounded"
-            onClick={() => setShowPopup(true)}
-          >
-            좌석 선택
-          </Button>
         </div>
 
-        {/* 좌석 선택 팝업 */}
-        {showPopup && (
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-10">
-            <div className="bg-white p-6 rounded-lg w-[90%] md:w-[70%] lg:w-[60%]">
-              <h2 className="text-xl font-bold mb-6 text-center">좌석 선택</h2>
+        {/* 상영 선택 단계 */}
+        {!showSeats && (
+          <div className="flex flex-col items-center space-y-4">
+            <h2 className="text-xl font-semibold mb-2">상영 시간 선택</h2>
+            {screenings.length === 0 && <p>해당 영화의 상영 일정이 없습니다.</p>}
 
-              <div className="bg-gray-200 text-center py-2 mb-4 font-semibold rounded">
-                스크린
-              </div>
-
-              {/* 좌석 구역 */}
-              <div className="flex justify-center space-x-8">
-                {[leftSeats, centerSeats, rightSeats].map((section, i) => (
-                  <div
-                    key={i}
-                    className={`grid ${
-                      i === 1 ? 'grid-cols-8' : 'grid-cols-4'
-                    } gap-2`}
-                  >
-                    {section.map((seat) => (
-                      <button
-                        key={seat.seatId}
-                        onClick={() => toggleSeatSelection(seat.seatId)}
-                        className={`w-8 h-8 rounded text-xs font-medium flex items-center justify-center ${
-                          seat.isReserved
-                            ? 'bg-red-600 text-white cursor-not-allowed'
-                            : selectedSeats.includes(seat.seatId)
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-gray-300 text-black'
-                        }`}
-                        disabled={seat.isReserved}
-                      >
-                        {seat.seatId}
-                      </button>
-                    ))}
-                  </div>
-                ))}
-              </div>
-
-              {/* 색상 안내 */}
-              <div className="flex justify-center space-x-6 mt-6 text-sm">
-                <div className="flex items-center space-x-1">
-                  <div className="w-4 h-4 bg-gray-300 rounded" />
-                  <span>예매 가능</span>
+            {screenings.map((s) => (
+              <div
+                key={s.screeningId}
+                className="border p-4 rounded w-[90%] md:w-[60%] flex justify-between items-center"
+              >
+                <div>
+                  <p>
+                    상영일:{" "}
+                    <strong>{s.screeningDate.toLocaleDateString()}</strong>
+                  </p>
+                  <p>
+                    시간: {s.startTime} ~ {s.endTime}
+                  </p>
+                  <p>가격: {s.ticketPrice.toLocaleString()}원</p>
                 </div>
-                <div className="flex items-center space-x-1">
-                  <div className="w-4 h-4 bg-red-600 rounded" />
-                  <span>예매 불가</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <div className="w-4 h-4 bg-blue-500 rounded" />
-                  <span>선택됨</span>
-                </div>
-              </div>
-
-              {/* 하단 버튼 */}
-              <div className="flex justify-between mt-6">
                 <Button
-                  className="bg-gray-500 text-white px-6 py-2 rounded"
-                  onClick={() => setShowPopup(false)}
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  onClick={() => handleSelectScreening(s)}
                 >
-                  취소
-                </Button>
-                <Button
-                  className="bg-blue-500 text-white px-6 py-2 rounded"
-                  onClick={handleBooking}
-                >
-                  예매하기
+                  선택
                 </Button>
               </div>
+            ))}
+          </div>
+        )}
+
+        {/* 좌석 선택 단계 */}
+        {showSeats && selectedScreening && theater && (
+          <div className="mt-6 text-center">
+            <h2 className="text-xl font-bold mb-4">
+              🎟 {theater.theaterName} 좌석 선택
+            </h2>
+
+            <div className="bg-gray-200 py-2 mb-4 rounded font-semibold">
+              스크린
+            </div>
+
+            {/* 좌석 구역 */}
+            <div className="grid grid-cols-8 gap-2 justify-center">
+              {seatLayout.map((seat) => (
+                <button
+                  key={seat.seatId}
+                  onClick={() => toggleSeatSelection(seat.seatId)}
+                  disabled={seat.isReserved}
+                  className={`w-8 h-8 rounded text-xs font-medium flex items-center justify-center
+                    ${
+                      seat.isReserved
+                        ? "bg-red-600 text-white cursor-not-allowed"
+                        : selectedSeats.includes(seat.seatId)
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-300 text-black"
+                    }`}
+                >
+                  {seat.seatId}
+                </button>
+              ))}
+            </div>
+
+            {/* 안내 색상 */}
+            <div className="flex justify-center space-x-6 mt-6 text-sm">
+              <div className="flex items-center space-x-1">
+                <div className="w-4 h-4 bg-gray-300 rounded" />
+                <span>예매 가능</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <div className="w-4 h-4 bg-red-600 rounded" />
+                <span>예매 불가</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <div className="w-4 h-4 bg-blue-500 rounded" />
+                <span>선택됨</span>
+              </div>
+            </div>
+
+            <div className="flex justify-between mt-6">
+              <Button
+                className="bg-gray-500 text-white px-6 py-2 rounded"
+                onClick={() => setShowSeats(false)}
+              >
+                뒤로가기
+              </Button>
+              <Button
+                className="bg-green-600 text-white px-6 py-2 rounded"
+                onClick={handleBooking}
+              >
+                예매하기
+              </Button>
             </div>
           </div>
         )}
