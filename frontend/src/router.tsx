@@ -19,6 +19,12 @@ import { TheaterEdit } from './theaters/theater-edit';
 import { TheaterDetail } from './theaters/theater-detail';
 import { MovieListPage } from './movielist/movielistpage';
 import { MovieDetailPage } from './movielist/movielist-detail';
+import { ScreeningInform } from './screening/screening-inform';
+import { ScreeningEdit } from './screening/screening-edit';
+import { ScreeningRegister } from './screening/screening-register';
+
+
+
 
 export const AppRouter = () => {
   return (
@@ -79,6 +85,19 @@ export const AppRouter = () => {
           </Route>
           <Route path={'/movielist/:id'}>
             {(params) => <MovieDetailPage id={params.id} />}
+          </Route>
+          <Route path={'/screening'} nest>
+            <Switch>
+              <Route path={'/'}>
+                <ScreeningInform />
+              </Route>
+              <Route path={'/edit/:id'}>
+                <ScreeningEdit />
+              </Route>
+              <Route path={'/register'}>
+                <ScreeningRegister />
+              </Route>
+            </Switch>
           </Route>
         </Switch>
       </AppLayout>
