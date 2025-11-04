@@ -94,7 +94,7 @@ export const AppRouter = () => {
               <Route path={'/edit/:id'}>
                 <ScreeningEdit />
               </Route>
-              <Route path={'/register'}>
+              <Route path={'/register/:id'}>
                 <ScreeningRegister />
               </Route>
             </Switch>
