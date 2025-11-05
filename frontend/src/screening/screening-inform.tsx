@@ -80,14 +80,6 @@ export const ScreeningInform = () => {
       >
         이전화면
       </Button>
-      <Link to='/register'>
-        <Button
-          type='button'
-          className='absolute top-2 left-2 bg-white text-gray-700 border border-gray-300 p-2 rounded hover:bg-gray-50'
-        >
-          영화등록
-        </Button>
-      </Link>
       <form className='flex flex-col gap-4 mt-20 p-4 max-w-md mx-auto'>
         <Input
           type='text'
@@ -147,18 +139,9 @@ export const ScreeningInform = () => {
                 type='button'
                 className='bg-gray-200 text-gray-800 w-20 h-16 p-2 rounded hover:bg-gray-300'
               >
-                수정
+                상영정보 관리
               </Button>
             </Link>
-            <Button
-              type='button'
-              className='bg-gray-300 text-gray-800 w-20 h-16 p-2 rounded hover:bg-gray-400'
-              onClick={() => setModalForMovieId(movie.id)}
-            >
-              영화
-              <br />
-              삭제
-            </Button>
 
           </span>
         </div>

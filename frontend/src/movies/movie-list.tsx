@@ -17,8 +17,8 @@ export const MoviesList = () => {
   const [directorSortOrder, setDirectorSortOrder] = useState('asc');
   const [dateSortOrder, setDateSortOrder] = useState('asc');
 
-  const [movies, setMovies] = useState(mockMovies); //임시 삭제 로직
-  const handleDelete = (id: number) => {
+  const [movies, setMovies] = useState(mockMovies); 
+  const handleDelete = (id: number) => { //임시 삭제 로직
     const modified = movies.filter((movie) => movie.id !== id);
     setMovies(modified);
     alert('삭제되었습니다.');
