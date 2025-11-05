@@ -134,7 +134,7 @@ export const ScreeningInform = () => {
             {movie.releaseDate}
           </span>
           <span className='w-1/4 flex gap-1 items-center justify-center'>
-            <Link to={`/edit/${movie.id}`} state={movie}>
+            <Link to={`/manage/${movie.id}`} state={movie}>
               <Button
                 type='button'
                 className='bg-gray-200 text-gray-800 w-20 h-16 p-2 rounded hover:bg-gray-300'
