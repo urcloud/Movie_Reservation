@@ -27,65 +27,63 @@ export const AppRouter = () => {
   return (
     <Router>
       <AppLayout>
+        <HomeHeader />
         <Switch>
-          <>
-            <HomeHeader />
-            <Route path={'/'}>
-              <Home />
-            </Route>
-            <Route path={'/admin'}>
-              <Admin />
-            </Route>
-            <Route path={'/movies'} nest>
-              <Switch>
-                <Route path={'/'}>
-                  <MoviesList />
-                </Route>
-                <Route path={'/edit/:id'}>
-                  <MovieEdit />
-                </Route>
-                <Route path={'/register'}>
-                  <MovieRegister />
-                </Route>
-              </Switch>
-            </Route>
-            <Route path='/theaters' nest>
-              <Switch>
-                <Route path='/'>
-                  <TheaterList />
-                </Route>
-                <Route path='/register'>
-                  <TheaterRegister />
-                </Route>
-                <Route path='/edit/:id'>
-                  <TheaterEdit />
-                </Route>
-                <Route path='/:id'>
-                  <TheaterDetail />
-                </Route>
-              </Switch>
-            </Route>
-            <Route path={'/guest-reservations'}>
-              <GuestReserv />
-            </Route>
-            <Route path={'/guest-reservations/:id'}>
-              {(params) => <GuestReservDetail id={params.id} />}
-            </Route>
-            <Route path={'/mem-reservations'}>
-              <MemberResrv />
-            </Route>
-            <Route path='/mem-reservations/:id'>
-              {(params) => <MemberReservDetail id={params.id} />}
-            </Route>
-            <Route path={'/login'} component={LoginForm} />
-            <Route path={'/signup'} component={SignupForm} />
-            <Route path={'/movielist'}>
-              <MovieListPage />
-            </Route>
-            <Route path={'/movielist/:id'}>
-              {(params) => <MovieDetailPage id={params.id} />}
-            </Route>
-          </>
+          <Route path={'/'}>
+            <Home />
+          </Route>
+          <Route path={'/admin'}>
+            <Admin />
+          </Route>
+          <Route path={'/movies'} nest>
+            <Switch>
+              <Route path={'/'}>
+                <MoviesList />
+              </Route>
+              <Route path={'/edit/:id'}>
+                <MovieEdit />
+              </Route>
+              <Route path={'/register'}>
+                <MovieRegister />
+              </Route>
+            </Switch>
+          </Route>
+          <Route path='/theaters' nest>
+            <Switch>
+              <Route path='/'>
+                <TheaterList />
+              </Route>
+              <Route path='/register'>
+                <TheaterRegister />
+              </Route>
+              <Route path='/edit/:id'>
+                <TheaterEdit />
+              </Route>
+              <Route path='/:id'>
+                <TheaterDetail />
+              </Route>
+            </Switch>
+          </Route>
+          <Route path={'/guest-reservations'}>
+            <GuestReserv />
+          </Route>
+          <Route path={'/guest-reservations/:id'}>
+            {(params) => <GuestReservDetail id={params.id} />}
+          </Route>
+          <Route path={'/mem-reservations'}>
+            <MemberResrv />
+          </Route>
+          <Route path='/mem-reservations/:id'>
+            {(params) => <MemberReservDetail id={params.id} />}
+          </Route>
+          <Route path={'/login'} component={LoginForm} />
+          <Route path={'/signup'} component={SignupForm} />
+          <Route path={'/movielist'}>
+            <MovieListPage />
+          </Route>
+          <Route path={'/movielist/:id'}>
+            {(params) => <MovieDetailPage id={params.id} />}
+          </Route>
           <Route path={'/booking/:id'}>
             <MovieReservation />
           </Route>

@@ -75,9 +75,9 @@ export const Home = () => {
           ))}
         </div>
         {activeTab !== 'Top3' && (
-          <div className="flex justify-center mt-6">
-            <Link to="/movielist">
-              <Button className="bg-blue-500 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-600 transition">
+          <div className='flex justify-center mt-6'>
+            <Link to='/movielist'>
+              <Button className='bg-blue-500 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-600 transition'>
                 더 많은 영화 목록 보기
               </Button>
             </Link>
