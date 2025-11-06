@@ -31,4 +31,18 @@ export const Reservs = {
   getMemberById(id: string): ReservItem | undefined {
     return MEMBER_RESERVS.find(r => r.id === id);
   },
+   cancelGuest(id: string): boolean {
+    const idx = GUEST_RESERVS.findIndex(r => r.id === id);
+    if (idx < 0) return false;
+    GUEST_RESERVS.splice(idx, 1);
+    return true;
+  },
+
+  /** 회원 예매 취소(실제 삭제). 성공하면 true, 없으면 false */
+  cancelMember(id: string): boolean {
+    const idx = MEMBER_RESERVS.findIndex(r => r.id === id);
+    if (idx < 0) return false;
+    MEMBER_RESERVS.splice(idx, 1);
+    return true;
+  },
 };

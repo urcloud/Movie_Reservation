@@ -1,29 +1,34 @@
-// /pages/guest-res-detail.tsx
+// /pages/mem-res-detail.tsx
 import { useMemo } from 'react';
+import { useLocation } from 'wouter';
 import { ReservDetailView, type ReservLite } from './res-detail-view';
-import { Reservs } from '../data/reservations'; // ← /data 폴더 경로 맞추기
+import { Reservs } from '../data/reservations';
 
 interface Props { id: string; }
 
 export const MemberReservDetail = ({ id }: Props) => {
-  // /data에서 id로 찾아오기
+  const [, setLocation] = useLocation();
+
   const data = useMemo<ReservLite | undefined>(() => {
     const found = Reservs.getMemberById(String(id));
-    return found
-      ? { ...found } // ReservLite 와 필드명이 동일하니 그대로 캐스팅/복사
-      : undefined;
+    return found ? { ...found } : undefined;
   }, [id]);
 
-  // 없을 때 간단 처리
   if (!data) {
     return <div className="p-6 text-red-600">예매 내역을 찾을 수 없습니다.</div>;
   }
 
+  const handleDelete = (rid: string) => {
+    Reservs.cancelMember?.(rid);     // ← reservations.ts에 아래 3) 추가
+    setLocation('/mem-reservations');
+  };
+
   return (
     <ReservDetailView
       Reserv={data}
-      backTo="/mem-Reservations"
+      backTo="/mem-reservations"      // ← 경로 일치
       title="예매 상세"
+      onDelete={handleDelete}         // ← 필수 콜백 전달
     />
   );
 };
