@@ -93,7 +93,7 @@ export const SignupForm = () => {
           />
           <Button
           type="submit"
-          className="w-full bg-primary text-white py-2 rounded hover:bg-blue-300"
+          className="w-full bg-blue-400 text-white py-2 rounded hover:bg-primary"
         >
           회원가입
         </Button>

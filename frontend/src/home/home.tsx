@@ -21,7 +21,6 @@ export const Home = () => {
 
   return (
     <PageLayout>
-      <HomeHeader />
       <Button onClick={() => setShowModal(true)}>show modal</Button>
       {showModal && (
         <Modal onClose={() => setShowModal(false)}>
