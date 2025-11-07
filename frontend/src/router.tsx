@@ -22,6 +22,10 @@ import { MovieDetailPage } from './movielist/movielist-detail';
 import { HomeHeader } from './home/home-header';
 import { MovieReservation } from './reservations/movie-reservation';
 import { MoviePayment } from './reservations/movie-payment';
+import { ScreeningInform } from './screening/screening-inform';
+import { ScreeningManage } from './screening/screening-manage';
+import { ScreeningRegister } from './screening/screening-register';
+import { ScreeningEdit } from './screening/screening-edit';
 
 export const AppRouter = () => {
   return (
@@ -89,6 +93,22 @@ export const AppRouter = () => {
           </Route>
           <Route path='/booking/:id/payment'>
             <MoviePayment />
+          </Route>
+          <Route path={'/screening'} nest>
+            <Switch>
+              <Route path={'/'}>
+                <ScreeningInform />
+              </Route>
+              <Route path={'/edit/:id'}>
+                <ScreeningEdit />
+              </Route>
+              <Route path={'/manage/:id'}>
+                <ScreeningManage />
+              </Route>
+              <Route path={'/register/:id'}>
+                <ScreeningRegister />
+              </Route>
+            </Switch>
           </Route>
         </Switch>
       </AppLayout>

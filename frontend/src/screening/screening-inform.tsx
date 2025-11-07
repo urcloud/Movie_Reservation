@@ -5,7 +5,7 @@ import { mockMovies } from '../data/movies';
 import { useState } from 'react';
 import { Modal } from '../commons/modal';
 
-export const MoviesList = () => {
+export const ScreeningInform = () => {
   const GoBack = () => {
     window.history.back();
   };
@@ -17,8 +17,8 @@ export const MoviesList = () => {
   const [directorSortOrder, setDirectorSortOrder] = useState('asc');
   const [dateSortOrder, setDateSortOrder] = useState('asc');
 
-  const [movies, setMovies] = useState(mockMovies); 
-  const handleDelete = (id: number) => { //임시 삭제 로직
+  const [movies, setMovies] = useState(mockMovies); //임시 삭제 로직
+  const handleDelete = (id: number) => {
     const modified = movies.filter((movie) => movie.id !== id);
     setMovies(modified);
     alert('삭제되었습니다.');
@@ -80,14 +80,6 @@ export const MoviesList = () => {
       >
         이전화면
       </Button>
-      <Link to='/register'>
-        <Button
-          type='button'
-          className='absolute top-2 left-2 bg-white text-gray-700 border border-gray-300 p-2 rounded hover:bg-gray-50'
-        >
-          영화등록
-        </Button>
-      </Link>
       <form className='flex flex-col gap-4 mt-20 p-4 max-w-md mx-auto'>
         <Input
           type='text'
@@ -142,23 +134,14 @@ export const MoviesList = () => {
             {movie.releaseDate}
           </span>
           <span className='w-1/4 flex gap-1 items-center justify-center'>
-            <Link to={`/edit/${movie.id}`} state={movie}>
+            <Link to={`/manage/${movie.id}`} state={movie}>
               <Button
                 type='button'
                 className='bg-gray-200 text-gray-800 w-20 h-16 p-2 rounded hover:bg-gray-300'
               >
-                수정
+                상영정보 관리
               </Button>
             </Link>
-            <Button
-              type='button'
-              className='bg-gray-300 text-gray-800 w-20 h-16 p-2 rounded hover:bg-gray-400'
-              onClick={() => setModalForMovieId(movie.id)}
-            >
-              영화
-              <br />
-              삭제
-            </Button>
 
           </span>
         </div>
