@@ -2,8 +2,18 @@ import { Button } from '../commons/button';
 import { Input } from '../commons/input';
 import { useState } from 'react';
 import { Modal } from '../commons/modal';
+import { mockMovies } from '../data/movies';
+import { useParams } from 'wouter';
 
 export const ScreeningEdit = () => {
+  const [screening] = history.state ? [history.state] : [{ screening: '' }];
+  const [showModal, setShowModal] = useState(false);
+  const labelStyle = 'block text-sm font-medium text-gray-600 mb-1';
+  const params = useParams();
+    const currentMovieId = Number(params.id); // 문자열 "1"을 숫자 1로 변경
+  const movie = mockMovies.find((m) => m.id === currentMovieId);
+  const movieTitle = movie ? movie.title : '영화 제목 불러오기 실패! 다시 시도해주세요';
+
  const GoBack = () => {
     window.history.back();
   };
@@ -15,10 +25,7 @@ export const ScreeningEdit = () => {
     alert('수정되었습니다.');
     window.location.href = '/screening';
   };
-  const [screening] = history.state ? [history.state] : [{ screening: '' }];
-  const [showModal, setShowModal] = useState(false);
-  const labelStyle = 'block text-sm font-medium text-gray-600 mb-1';
-  const formatToLocalISO = (isoString: string) => { //날짜 및 상영관 유효성 검사 추가 필요
+  const formatToLocalISO = (isoString: string) => { // 상영관 데이터 추가시 날짜 및 상영관 유효성 검사 추가 필요
     if (!isoString) return '';
     const date = new Date(isoString);
     const year = date.getFullYear();
@@ -39,7 +46,7 @@ export const ScreeningEdit = () => {
         이전화면
       </Button>
       <form className='flex flex-col gap-4 p-4 max-w-md mx-auto'>
-        
+         <h1 className='text-2xl font-bold text-center mb-4'>"{movieTitle}" 상영 정보 수정</h1>
         <div>
           <label htmlFor='theater' className={labelStyle}>상영관</label>
           <Input
