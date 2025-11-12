@@ -1,14 +1,13 @@
 import { Button } from '../commons/button';
 import { useState } from 'react';
-import { Link } from 'wouter';
+import { Link, useParams } from 'wouter';
 import { mockScreenings } from '../data/screenings';
 import { Modal } from '../commons/modal';
 import { mockMovies } from '../data/movies';
-import { useParams } from 'wouter';
 
 export const ScreeningManage = () => {
   const params = useParams();
-  const currentMovieId = Number(params.id); // 문자열 "1"을 숫자 1로 변경
+  const currentMovieId = Number(params.id);
   const movie = mockMovies.find((m) => m.id === currentMovieId);
   const movieTitle = movie
     ? movie.title
@@ -34,19 +33,12 @@ export const ScreeningManage = () => {
   const GoBack = () => {
     window.history.back();
   };
+
   const formatLocalDate = (date: Date) => {
     if (!date) return '';
     return date.toLocaleDateString('ko-KR');
   };
-  const formatLocalTime = (isoString: string) => {
-    if (!isoString) return '';
-    const date = new Date(isoString);
-    return date.toLocaleTimeString('ko-KR', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
+ 
   return (
     <div className='relative pt-20 bg-gray-50 min-h-screen'>
       <Button
@@ -59,7 +51,7 @@ export const ScreeningManage = () => {
       <h1 className='text-2xl font-bold text-center mb-4'>
         "{movieTitle}" 상영 정보
       </h1>
-      <div className='max-w-md mx-auto mt-20 flex flex-col gap-4 p-4'>
+      <div className='max-w-md mx-auto flex flex-col gap-4 p-4'>
         {screenings.map((screening) => (
           <div
             key={screening.screeningId}
@@ -72,10 +64,10 @@ export const ScreeningManage = () => {
               상영일자: {formatLocalDate(screening.screeningDate)}
             </p>
             <p className='text-gray-600'>
-              상영 시작 시간: {formatLocalTime(screening.startTime)}
+              상영 시작 시간: {screening.startTime}
             </p>
             <p className='text-gray-600'>
-              상영 종료 시간: {formatLocalTime(screening.endTime)}
+              상영 종료 시간: {screening.endTime}
             </p>
             <p className='text-gray-600'>가격: {screening.ticketPrice}</p>
 
