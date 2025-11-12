@@ -10,7 +10,9 @@ export const ScreeningManage = () => {
   const params = useParams();
   const currentMovieId = Number(params.id); // 문자열 "1"을 숫자 1로 변경
   const movie = mockMovies.find((m) => m.id === currentMovieId);
-  const movieTitle = movie ? movie.title : '영화 제목 불러오기 실패! 다시 시도해주세요';
+  const movieTitle = movie
+    ? movie.title
+    : '영화 제목 불러오기 실패! 다시 시도해주세요';
 
   const [screenings, setScreenings] = useState(() =>
     mockScreenings.filter((s) => s.movieId === currentMovieId),
@@ -32,9 +34,8 @@ export const ScreeningManage = () => {
   const GoBack = () => {
     window.history.back();
   };
-  const formatLocalDate = (isoString: string) => {
-    if (!isoString) return '';
-    const date = new Date(isoString);
+  const formatLocalDate = (date: Date) => {
+    if (!date) return '';
     return date.toLocaleDateString('ko-KR');
   };
   const formatLocalTime = (isoString: string) => {
