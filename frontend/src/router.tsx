@@ -4,15 +4,9 @@ import { MovieEdit } from './movies/movie-edit';
 import { MoviesList } from './movies/movie-list';
 import { MovieRegister } from './movies/movie-register';
 import { AppLayout } from './layouts/app-layout';
-import { GuestReserv } from './reservations/guest-reservation';
-import { GuestReservDetail } from './reservations/guest-res-detail';
 import { Admin } from './admin/admin-page';
-import { MemberResrv } from './reservations/mem-reservation';
-import { MemberReservDetail } from './reservations/mem-res-detail';
-
 import { LoginForm } from './pages/login';
 import { SignupForm } from './pages/signup';
-
 import { TheaterList } from './theaters/theaters-list';
 import { TheaterRegister } from './theaters/theater-register';
 import { TheaterEdit } from './theaters/theater-edit';
@@ -22,6 +16,8 @@ import { MovieDetailPage } from './movielist/movielist-detail';
 import { HomeHeader } from './home/home-header';
 import { MovieReservation } from './reservations/movie-reservation';
 import { MoviePayment } from './reservations/movie-payment';
+import ReservationsGate from './reservations/reservations';
+import ReservationDetailGate from './reservations/reservation-detail';
 
 export const AppRouter = () => {
   return (
@@ -64,18 +60,8 @@ export const AppRouter = () => {
               </Route>
             </Switch>
           </Route>
-          <Route path={'/guest-reservations'}>
-            <GuestReserv />
-          </Route>
-          <Route path={'/guest-reservations/:id'}>
-            {(params) => <GuestReservDetail id={params.id} />}
-          </Route>
-          <Route path={'/mem-reservations'}>
-            <MemberResrv />
-          </Route>
-          <Route path='/mem-reservations/:id'>
-            {(params) => <MemberReservDetail id={params.id} />}
-          </Route>
+
+
           <Route path={'/login'} component={LoginForm} />
           <Route path={'/signup'} component={SignupForm} />
           <Route path={'/movielist'}>
@@ -89,6 +75,13 @@ export const AppRouter = () => {
           </Route>
           <Route path='/booking/:id/payment'>
             <MoviePayment />
+          </Route>
+
+          <Route path="/reservations">
+            <ReservationsGate />
+          </Route>
+          <Route path="/reservations/:id">
+            <ReservationDetailGate />
           </Route>
         </Switch>
       </AppLayout>

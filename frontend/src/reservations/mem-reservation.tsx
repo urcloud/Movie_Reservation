@@ -12,17 +12,13 @@ export const MemberResrv = () => {
     <PageLayout>
       <ContentLayout>
           <div className="mb-4 flex items-center justify-between">
-          <Link to="/">
-            <Button className="px-3 py-2 rounded bg-gray-200">홈</Button>
-          </Link>
-          <Link to="/guest-reservations">
-            <Button className="px-3 py-2 rounded bg-black text-white">비회원 예매</Button>
-          </Link>
+       
+          
         </div>
         <h1 className="text-xl font-bold mb-4">회원 예매내역</h1>
         <div className="grid gap-2">
           {rows.map(b => (
-            <Link key={b.id} to={`/mem-reservations/${b.id}`}>
+            <Link to={`/reservations/${b.id}`}>
               <div className="border p-3 rounded bg-white shadow-sm hover:bg-gray-50 cursor-pointer">
                 <p className="font-semibold"> {b.movie}</p>
                 <p className="text-sm text-gray-600">{b.date} {b.time} · {b.theater} · 좌석 {b.seat}</p>
