@@ -10,9 +10,9 @@ export const SignupForm = () => {
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [formData, setFormData] = useState({
-    name: '',
+    member_name: '',
     email: '',
-    birth: '',
+    birthday: '',
     password: '',
     confirm: '',
   });
@@ -27,9 +27,9 @@ export const SignupForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const { name, email, birth, password, confirm } = formData;
+      const { member_name, email, birthday, password, confirm } = formData;
 
-      if (!name || !email || !birth || !password || !confirm) {
+      if (!member_name || !email || !birthday || !password || !confirm) {
         alert('모든 항목을 입력해주세요!');
         return;
       }
@@ -38,11 +38,12 @@ export const SignupForm = () => {
         alert('비밀번호가 일치하지 않습니다.');
         return;
       }
-      const successSignup = await signup(name, email, birth, password);
+      const successSignup = await signup(member_name, email, birthday, password);
       console.log("error1: ",successSignup)
-      if (successSignup) {
+      if (successSignup.success) {
         setSuccess(true);
-        alert(`${name}님, 회원가입이 완료되었습니다!`);
+        setErrorMsg('')
+        alert(`${member_name}님, 회원가입이 완료되었습니다!`);
       }
       // 실제 회원가입 로직은 서버 통신으로 처리해야 함
       console.log('회원가입 정보:', formData);
@@ -60,9 +61,9 @@ export const SignupForm = () => {
         <form onSubmit={handleSubmit} className='flex flex-col space-y-3'>
           <Input
             type='text'
-            name='name'
+            name='member_name'
             placeholder='이름'
-            value={formData.name}
+            value={formData.member_name}
             onChange={handleChange}
             required
           />
@@ -76,9 +77,9 @@ export const SignupForm = () => {
           />
           <Input
             type='date'
-            name='birth'
+            name='birthday'
             placeholder='생년월일'
-            value={formData.birth}
+            value={formData.birthday}
             onChange={handleChange}
             required
           />

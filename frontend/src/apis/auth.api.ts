@@ -1,6 +1,6 @@
 const getUser = async () => {
   try{
-    const res = await fetch(`api/auth/user`)
+    const res = await fetch(`api/auth/getUser`)
     const data = await res.json()
     return data;
   }catch(error){
@@ -30,15 +30,15 @@ const logout= async () =>  {
 }
 
 const signup = async (
-    name: string,
+    member_name: string,
     email: string, 
-    birth: string,
+    birthday: string,
     password: string
 ) => {
   const res = await fetch(`api/auth/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password, birth, name }),
+    body: JSON.stringify({ email, password, birthday, member_name }),
     credentials: "include", // 쿠키 포함
   });
   return res.json();

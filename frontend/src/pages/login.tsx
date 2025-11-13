@@ -27,9 +27,11 @@ export function LoginForm() {
       console.log("여기")
       const successLogin = await login(email, password);
       console.log('successLogin: ', successLogin);
-      if (successLogin) {
+      if (successLogin.success) {
         setSuccess(true);
         setErrorMsg('');
+        localStorage.setItem("member_name", successLogin.member_name);
+        localStorage.setItem("email", successLogin.email);
         if(success){
           alert('로그인이 완료되었습니다.');
           setLocation('/');

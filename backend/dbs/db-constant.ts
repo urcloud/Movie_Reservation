@@ -1,4 +1,4 @@
 export const TABLE_NAMES = {
-  roles: 'roles',
+  role: 'role',
   users: 'users',
 };

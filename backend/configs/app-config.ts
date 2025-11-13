@@ -4,4 +4,5 @@ export const appConfig = {
   dbUri:
     process.env.DB_CONNECTION ||
     `postgresql://test:test@localhost:5432/${APP_NAME}`,
+  jwtSecret: 'movie_reservation'  
 };
