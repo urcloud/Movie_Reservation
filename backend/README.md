@@ -56,3 +56,11 @@
    ```
 
 1. 백엔드 서버를 다시 실행합니다.
+
+## 테이블 만들기
+
+명령창에서 다음을 실행하여 테이블들을 만듭니다.
+
+```bash
+psql -U test -d movie_reservation -f ./backend/migrations/1-create_tables.pgsql
+```
