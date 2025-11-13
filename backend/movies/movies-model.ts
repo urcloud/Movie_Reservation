@@ -1,4 +1,4 @@
-export type Screening = {
+export type Movies = {
   screeningid: number;
   movieid: number;
   theaterid: number;

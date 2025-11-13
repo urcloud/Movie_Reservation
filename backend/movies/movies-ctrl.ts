@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import * as screeningDb from './screening-db';
+import * as moviesDb from './movies-db';
 
 export const getInfo: RequestHandler = async (req, res) => {
     res.send("테스트");

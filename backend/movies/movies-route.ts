@@ -1,5 +1,5 @@
 import express from 'express';
-import { getInfo } from './screening-ctrl';
+import { getInfo } from './movies-ctrl';
 const router = express.Router();
 
 router.route('/').get(getInfo);
