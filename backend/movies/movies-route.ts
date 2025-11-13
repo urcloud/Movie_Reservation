@@ -1,7 +1,8 @@
 import express from 'express';
-import { getInfo } from './movies-ctrl';
+import { getInfo, movieRegister } from './movies-ctrl';
 const router = express.Router();
 
 router.route('/').get(getInfo);
+router.route('/register').post(movieRegister);
 
 export default router;

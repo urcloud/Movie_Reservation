@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS screening (
     movie_id INT NOT NULL REFERENCES movie(id) ON DELETE CASCADE, 
     theater_id INT NOT NULL REFERENCES theater(id) ON DELETE CASCADE, 
     screening_date DATE NOT NULL, start_time TIME NOT NULL, 
-    end_time TIME NOT NULL, ticket_price INT NOT NULL ); 
+    end_time TIME NOT NULL, ticket_price INT NOT NULL );
  
 --screening_seat table 
 --theater나 seat 삭제 시 screening_seat 데이터도 CASCADE로 삭제 
