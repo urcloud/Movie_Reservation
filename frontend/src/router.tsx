@@ -27,9 +27,9 @@ export const AppRouter = () => {
   return (
     <Router>
       <AppLayout>
+        <HomeHeader />
         <Switch>
           <>
-            <HomeHeader />
             <Route path={'/'}>
               <Home />
             </Route>

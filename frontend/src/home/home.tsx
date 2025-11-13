@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { ContentLayout } from '../layouts/content-layout';
 import { PageLayout } from '../layouts/page-layout';
-import { HomeHeader } from './home-header';
 import { Modal } from '../commons/modal';
 import { Button } from '../commons/button';
 import { tabData } from '../data/movies';

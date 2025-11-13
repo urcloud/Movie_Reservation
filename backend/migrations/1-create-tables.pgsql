@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS users (
   email TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
   name VARCHAR(50),
+  birth DATE NOT NULL,
   role_id INTEGER REFERENCES roles (id) NOT NULL,
   created_at timestamp with time zone DEFAULT NOW()
 );
