@@ -79,7 +79,7 @@ export const HomeHeader = () => {
               >
                 로그아웃
               </Button>
-              <Link to="/mem-reservations">
+              <Link to="/reservations">
                 <span className="hover:underline">내 예매내역</span>
               </Link>
             </>
@@ -88,7 +88,7 @@ export const HomeHeader = () => {
               <Link to="/login">
                 <span className="hover:underline">로그인/회원가입</span>
               </Link>
-              <Link to="/guest-reservations">
+              <Link to="/reservations">
                 <span className="hover:underline">예매내역조회</span>
               </Link>
             </>
