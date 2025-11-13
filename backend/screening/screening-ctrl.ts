@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { RequestHandler } from 'express';
 import bcrypt from 'bcryptjs';
-import * as authDb from './auth-db';
+import * as screeningDb from './screening-db';
 
 const SECRET = "MY_SECRET_KEY";
 
@@ -65,15 +65,15 @@ export const signup: RequestHandler = async (req, res) => {
     const user = req.body;
     console.log('user', user);
     // 1) user exists
-    const userExist = await authDb.findUserByEmail(user.email);
+    const userExist = await screeningDb.findUserByEmail(user.email);
     if (userExist) {
       throw new Error('user가 이미 있습니다.');
       return res.status(409).send('user가 이미 있습니다.');
     }
     // 2) password hash
     const hash = bcrypt.hashSync(user.password);
-    const role = await authDb.findRoleByName('member');
-    const result = await authDb.createUser({ ...user,role_id:role?.id, password: hash });
+    const role = await screeningDb.findRoleByName('member');
+    const result = await screeningDb.createUser({ ...user,role_id:role?.id, password: hash });
     res.json(result);
   } catch (error:any) {
     return res.status(500).send(error.message);

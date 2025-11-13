@@ -1,6 +1,6 @@
 import { db } from '../dbs';
 import { TABLE_NAMES } from '../dbs/db-constant';
-import { User } from './auth-model';
+import { User } from './screening-model';
 
 export const createUser = async (user: User) => {
   return await db.insertOne(TABLE_NAMES.users, user);
