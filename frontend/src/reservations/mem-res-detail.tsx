@@ -20,15 +20,16 @@ export const MemberReservDetail = ({ id }: Props) => {
 
   const handleDelete = (rid: string) => {
     Reservs.cancelMember?.(rid);     // ← reservations.ts에 아래 3) 추가
-    setLocation('/mem-reservations');
+    setLocation('/reservations');
   };
 
   return (
     <ReservDetailView
       Reserv={data}
-      backTo="/mem-reservations"      // ← 경로 일치
+      backTo="/reservations"      // ← 경로 일치
       title="예매 상세"
       onDelete={handleDelete}         // ← 필수 콜백 전달
     />
   );
 };
+

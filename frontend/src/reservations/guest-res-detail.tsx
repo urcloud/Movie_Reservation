@@ -22,13 +22,13 @@ export const GuestReservDetail = ({ id }: Props) => {
   const handleDelete = (rid: string) => {
     // 존재한다면 취소 API/메서드 호출 (in-memory라면 아래처럼)
     Reservs.cancelGuest?.(rid);      // ← reservations.ts에 아래 3) 추가
-    setLocation('/guest-reservations');
+    setLocation('/reservations');
   };
 
   return (
     <ReservDetailView
       Reserv={data}
-      backTo="/guest-reservations"   // ← 대소문자 수정
+      backTo="/reservations"   // ← 대소문자 수정
       title="예매 상세"
       onDelete={handleDelete}        // ← 필수 콜백 전달
     />

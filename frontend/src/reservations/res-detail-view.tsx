@@ -18,12 +18,12 @@ export function ReservDetailView({
   Reserv,
   backTo = '/',
   title = '예매 상세',
-  onDelete, // ✅ 추가: 부모가 넘겨주는 삭제 콜백
+  onDelete, //  추가: 부모가 넘겨주는 삭제 콜백
 }: {
   Reserv: ReservLite;
   backTo?: string;
   title?: string;
-  onDelete: (id: string) => void; // ✅ 필수 콜백
+  onDelete: (id: string) => void; //  필수 콜백
 }) {
   // 상태표시는 더이상 필요 없지만(삭제가 되면 목록에서 사라짐), UI는 유지 가능
   const [showConfirm, setShowConfirm] = useState(false);
@@ -81,7 +81,7 @@ export function ReservDetailView({
           </Modal>
         )}
 
-        {/* 완료 모달 (원하면 생략 가능) */}
+        {/* 완료 모달  */}
         {showDone && (
           <Modal onClose={closeDone}>
             <div className="w-72">
