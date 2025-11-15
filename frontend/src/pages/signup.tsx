@@ -38,9 +38,9 @@ export const SignupForm = () => {
         alert('비밀번호가 일치하지 않습니다.');
         return;
       }
-      const successSignup = await signup(member_name, email, birthday, password);
-      console.log("error1: ",successSignup)
-      if (successSignup.success) {
+      const res = await signup(member_name, email, birthday, password);
+      console.log("error1: ",res)
+      if (res.ok) {
         setSuccess(true);
         setErrorMsg('')
         alert(`${member_name}님, 회원가입이 완료되었습니다!`);
