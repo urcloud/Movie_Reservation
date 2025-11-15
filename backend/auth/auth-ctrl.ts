@@ -3,7 +3,7 @@ import { RequestHandler } from 'express';
 import bcrypt from 'bcryptjs';
 import * as authDb from './auth-db';
 import { appConfig } from '../configs/app-config';
-import { findOneById } from '../dbs/database';
+
 const SECRET = 'MY_SECRET_KEY';
 
 export const getUser: RequestHandler = async (req, res) => {
@@ -71,13 +71,17 @@ export const login: RequestHandler = async (req, res) => {
 // 로그아웃
 export const logout: RequestHandler = async (req, res) => {
   try {
-    const data = req.body;
-    if (!req.cookies.movie_reservation) {
+    const token = req.cookies.token;
+    if (!token) {
       res.status(401).send('로그인하지 않은 사용자');
     }
-    console.log(data);
-    res.clearCookie(appConfig.cookieName);
-    res.status(200).json();
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      path: '/',
+    });
+    res.status(200).json({ ok: true });
   } catch (error) {
     console.error(error);
     return res.status(500).send('로그인 에러');
