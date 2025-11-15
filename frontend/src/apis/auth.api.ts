@@ -1,7 +1,13 @@
 const getUser = async () => {
   try{
-    const res = await fetch(`api/auth/getUser`)
+    const res = await fetch(`api/auth/getUser`,{
+      method:"GET",
+      credentials: "include" // 쿠키 포함
+    })
+    if (!res.ok) throw new Error("Not logged in");
+    
     const data = await res.json()
+    console.log("응답상태:", data);
     return data;
   }catch(error){
     console.log("error",error)
