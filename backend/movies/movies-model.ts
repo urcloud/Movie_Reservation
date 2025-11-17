@@ -1,4 +1,4 @@
-export type Movies = {
+export type Movie = {
     movieid: number;
     userid: number;
     title: string;
