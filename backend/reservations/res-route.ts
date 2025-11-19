@@ -1,15 +1,20 @@
+// src/reservations/res-route.ts
 import express from 'express';
 import {
   getMemberReservations,
+  postGuestReservations,
   getReservationDetail,
 } from './res-ctrl';
 
 const router = express.Router();
 
-// GET /api/reservations/member?email=foo@bar.com
-router.route('/member').get(getMemberReservations);
+// 회원
+router.get('/member', getMemberReservations);
 
-// GET /api/reservations/:id
-router.route('/:id').get(getReservationDetail);
+// ✅ 비회원 (POST)
+router.post('/guest', postGuestReservations);
+
+// 상세
+router.get('/:id', getReservationDetail);
 
 export default router;

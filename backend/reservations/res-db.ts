@@ -1,4 +1,6 @@
 import { db } from '../dbs';
+import { ReservationRow, mapRowToReservation } from './res-model'; 
+
 
 // 프론트의 ReservItem 모양 그대로
 export type ReservItem = {
@@ -46,6 +48,7 @@ export const listReservationsByEmail = async (
     created_at: r.created_at?.toISOString?.() ?? undefined,
   }));
 };
+
 
 export const getReservationById = async (
   id: number,
