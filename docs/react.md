@@ -20,6 +20,11 @@ function AboutPage() {
   );
 }
 ```
+##componenet 
+always first word is Big word
+리턴시 태그
+
+
 
 - 리액트가 jsx 구문을 해석하여 자바스크립트 구문으로 변경
 - JSX는 HTML보다 엄격합니다. JSX에서는 `<br />`같이 태그를 닫아야 합니다.

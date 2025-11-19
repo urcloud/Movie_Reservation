@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "2025-2-compmath",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

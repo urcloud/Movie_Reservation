@@ -16,15 +16,15 @@
    - [VS Code](https://code.visualstudio.com/download)
    - [Git](https://git-scm.com/downloads) - 분산 버전 관리 시스템
 
-1. [https://compmath.korea.ac.kr/gitlab](https://compmath.korea.ac.kr/gitlab) 수강생 등록
+2. [https://compmath.korea.ac.kr/gitlab](https://compmath.korea.ac.kr/gitlab) 수강생 등록
 
-1. 깃 클론
+3. 깃 클론
 
    ```bash
    git clone https://compmath.korea.ac.kr/gitlab/courses1/indust-math/2025-2/2025-industmath-2.git
    ```
 
-1. 피그마 등록
+4. 피그마 등록
 
 ## 기술 세부 사항
 
@@ -65,7 +65,7 @@
 
 ## 프로젝트 실행
 
-### 프론트엔드
+## 프론트엔드
 
 프로젝트를 복제한 후 처음 실행할 때는 다음과 같은 명령어를 실행해서 필요한 패키지들을 설치하셔야 합니다. 프로젝트 복제한 후 최초 한 번만 필요합니다.
 
@@ -81,17 +81,23 @@ npm install
 npm run dev
 ```
 
-### 백엔드
+## 백엔드
 
-프로젝트를 복제한 후 처음 실행할 때는 다음과 같은 명령어를 실행해서 필요한 패키지들을 설치하셔야 합니다. 프로젝트 복제한 후 최초 한 번만 필요합니다.
+프로젝트를 복제(clone)한 후 처음 실행할 때는 다음과 같은 명령어를 실행해서 필요한 패키지들을 설치하셔야 합니다.
+
+**backend** 폴더로 이동
 
 ```bash
 cd backend
 ```
 
+**새로 설치한 모듈이 있을 때에 실행**
+
 ```bash
 npm install
 ```
+
+**백엔드 서버 실행**
 
 ```bash
 npm run dev
@@ -130,5 +136,19 @@ npm run dev
    ```
 
 1. 백엔드 서버를 다시 실행합니다.
+
+## 설계
+
+### api 명세서
+
+https://www.notion.so/2682843a6e8a808597fae82f9410fa00?v=2682843a6e8a80478529000c6a996a24&source=copy_link
+
+![api](img/api.png)
+
+### erd 설계
+
+https://www.erdcloud.com/d/7JWz4DsBy7tMmBxj8
+
+![erd](img/erd.png)
 
 [postgresql_download]: https://www.postgresql.org/download/
