@@ -1,10 +1,14 @@
 import express from 'express';
-import { getInfo,screeningRegister,screeningDelete,screeningUpdate } from './screening-ctrl';
+import { getAllScreenings,getScreening,screeningRegister,screeningDelete,screeningUpdate } from './screening-ctrl';
 const router = express.Router();
 
-router.route('/').get(getInfo);
-router.route('/register').post(screeningRegister);
-router.route('/delete/:id').delete(screeningDelete);
-router.route('/update/:id').put(screeningUpdate);
+router.route('/') 
+    .get(getAllScreenings)
+    .post(screeningRegister);
+
+router.route('/:id')
+    .get(getScreening)
+    .put(screeningUpdate)
+    .delete(screeningDelete);
 
 export default router;
