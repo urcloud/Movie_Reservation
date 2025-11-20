@@ -6,6 +6,6 @@ import movieRouter from './movies/movies-route';
 const router = express.Router();
 router.use('/auth', authRouter);
 router.use('/screening', screeningRouter);
-router.use('/movies', movieRouter);
+router.use('/movie', movieRouter);
 
 export default router;

@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.route('/') 
     .get(getAllScreenings)
-    .post(screeningRegister);
+    .post(/*authenticated, hasRole('admin')*/screeningRegister); //authenticated,hasRole 성공 시 next로 screeningRegister 호출
 
 router.route('/:id')
     .get(getScreening)

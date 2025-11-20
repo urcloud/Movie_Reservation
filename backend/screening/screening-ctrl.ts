@@ -7,7 +7,7 @@ export const getAllScreenings: RequestHandler = async (req, res) => {
     res.status(200).json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).send({ message: '오류가 발생했습니다.', error });
+    res.send({ message: '오류가 발생했습니다.', error });
   }
 };
 
@@ -23,12 +23,13 @@ export const getScreening: RequestHandler = async (req, res) => {
     res.status(200).json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).send({ message: '오류가 발생했습니다.', error });
+    res.send({ message: '오류가 발생했습니다.', error });
   }
 };
 
 export const screeningRegister: RequestHandler = async (req, res) => {
-  // 401 로그인하지 않은 사용자, 403 권한없는 시용자 체크 필요
+  // 401 로그인하지 않은 사용자, 403 권한없는 사용자 체크 필요
+  // 로그인여부 판별,관리자 여부 판별 함수 auth/ctrl에서 구현후 import 해서 사용
 
   const { movieid, theaterid, screeningdate, starttime, endtime, ticketprice } = req.body;
   if (!movieid || !theaterid || !screeningdate || !starttime || !endtime || !ticketprice) {
@@ -42,7 +43,7 @@ export const screeningRegister: RequestHandler = async (req, res) => {
     res.status(201).send({ message: '성공적으로 등록되었습니다.', data: result });
   } catch (error) {
     console.error(error);
-    res.status(500).send({ message: '오류가 발생했습니다.', error });
+    res.send({ message: '오류가 발생했습니다.', error });
   }
 };
 
@@ -60,7 +61,7 @@ export const screeningDelete: RequestHandler = async (req, res) => {
     res.status(200).send({ message: '성공적으로 삭제되었습니다.', data: result });
   } catch (error) {
     console.error(error);
-    res.status(500).send({ message: '오류가 발생했습니다.', error });
+    res.send({ message: '오류가 발생했습니다.', error });
   }
 };
 
@@ -81,6 +82,6 @@ export const screeningUpdate: RequestHandler = async (req, res) => {
     res.status(200).send({ message: '수정 성공!', data: result });
   } catch (error) {
     console.error(error);
-    res.status(500).send({ message: '오류가 발생했습니다.', error });
+    res.send({ message: '오류가 발생했습니다.', error });
   }
 };
