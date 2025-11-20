@@ -53,7 +53,7 @@ export const HomeHeader = () => {
               {/* 로그인 상태에서도 클릭 로직은 동일하게 handleReservationsClick 사용 */}
               <button
                 type='button'
-                onClick={handleReservationsClick}
+                // onClick={handleReservationsClick}
                 className='hover:underline'
               >
                 내 예매내역
@@ -66,7 +66,7 @@ export const HomeHeader = () => {
               </Link>
               <button
                 type='button'
-                onClick={handleReservationsClick}
+                // onClick={handleReservationsClick}
                 className='hover:underline'
               >
                 예매내역조회
