@@ -1,0 +1,24 @@
+meta {
+  name: theater-register
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3000/api/theaters
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "theaterName": "1관 IMAX",
+    "rows": 10,
+    "cols": 15
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,20 +1,46 @@
 import { Link } from 'wouter';
 import { Button } from '../commons/button';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-const theaterData = [
-  { id: 1, name: '1관', rows: 30, cols: 5, seats: 150 },
-  { id: 2, name: '2관', rows: 30, cols: 4, seats: 120 },
-];
+interface Theater {
+  theaterId: number;
+  theaterName: string;
+  rows: number;
+  cols: number;
+  totalSeats: number;
+}
 
 export const TheaterList = () => {
-  const [theaters, setTheaters] = useState(theaterData);
+  const [theaters, setTheaters] = useState<Theater[]>([]);
 
-  const handleDelete = (id: number) => {
-    const modified = theaters.filter((theater) => theater.id !== id);
-    setTheaters(modified);
-    console.log('delete', id);
+  // 목록
+  useEffect(() => {
+    fetch('/api/theaters')
+      .then((res) => res.json())
+      .then((data) => setTheaters(data))
+      .catch((err) => console.error('Error:', err));
+  }, []);
+
+  // 삭제 핸들러
+  const handleDelete = async (id: number) => {
+    if (!confirm('정말 삭제하시겠습니까?')) return;
+
+    try {
+      const res = await fetch(`/api/theaters/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (res.ok) {
+        setTheaters(theaters.filter((t) => t.theaterId !== id));
+      } else {
+        const errorData = await res.json();
+        alert(`삭제 실패: ${errorData.message}`);
+      }
+    } catch (err) {
+      console.error('Delete error:', err);
+    }
   };
+
   return (
     <div>
       <Button
@@ -25,7 +51,7 @@ export const TheaterList = () => {
         이전화면
       </Button>
 
-      <form className='flex flex-col gap-4 p-4 mt-20 max-w-md mx-auto'>
+      <div className='flex flex-col gap-4 p-4 mt-20 max-w-md mx-auto'>
         <Link to='/register'>
           <Button
             type='button'
@@ -34,22 +60,23 @@ export const TheaterList = () => {
             상영관 등록
           </Button>
         </Link>
-      </form>
+      </div>
 
+    
       {theaters.map((theater) => (
         <div
-          key={theater.id}
+          key={theater.theaterId}
           className='flex justify-evenly w-full h-20 mt-0.5 bg-gray-300 border border-black'
         >
           <span className='flex items-center justify-center w-1/4'>
-            {theater.name}
+            {theater.theaterName}
           </span>
 
           <span className='flex items-center justify-center w-1/4'>
-            {theater.seats}석
+            {theater.totalSeats}석
           </span>
-          <span className='flex gap-1'>
-            <Link to={`/${theater.id}`}>
+          <span className='flex gap-1 items-center'>
+            <Link to={`/${theater.theaterId}`}>
               <Button
                 type='button'
                 className='bg-green-500 w-20 h-20 p-2 rounded'
@@ -57,7 +84,7 @@ export const TheaterList = () => {
                 조회
               </Button>
             </Link>
-            <Link to={`/edit/${theater.id}`} state={theater}>
+            <Link to={`/edit/${theater.theaterId}`} state={theater}>
               <Button
                 type='button'
                 className='bg-blue-500 w-20 h-20 p-2 rounded'
@@ -67,7 +94,7 @@ export const TheaterList = () => {
             </Link>
             <Button
               type='button'
-              onClick={() => handleDelete(theater.id)}
+              onClick={() => handleDelete(theater.theaterId)}
               className='bg-gray-500 w-20 h-20 p-2 rounded'
             >
               삭제
