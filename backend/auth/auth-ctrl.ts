@@ -1,79 +1,152 @@
-  import jwt from "jsonwebtoken";
-  import { RequestHandler } from 'express';
-  import bcrypt from 'bcryptjs';
-  import * as authDb from './auth-db';
+import jwt from 'jsonwebtoken';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
+import bcrypt from 'bcryptjs';
+import * as usersDb from '../users/users-db';
+import { appConfig } from '../configs/app-config';
 
-  const SECRET = "MY_SECRET_KEY";
+export const getUser: RequestHandler = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).send('쿠키에 토큰이 없습니다');
+    }
 
-  export const getUser: RequestHandler = async (req, res) => {
-      try {
-          if (req.cookies.butterStudio) {
-              const token = req.cookies.butterStudio;
-              // const { id, role } = jwt.verify(token, config.jwtSecret);
-              // res.json( { id, role } );
-          } else {
-              res.json({ id: 0, role: "user" });
-          }
-      } catch (error) {
-          console.error(error);
-          return res.status(500).send("유저를 가져오지 못했습니다.");
-      }
-  }
-
-
-  export const login: RequestHandler = async (req, res) => {
+    let payload: any;
     try {
-      console.log('req.body', req.body);
-      const userInfo = req.body;
-      const user = userInfo; 
-      //const user = await authDb.findUserByEmail(userInfo.email);
-      /*if (!user) {
-        throw new Error('사용자가 없습니다');
-      }
-      const matchPassword = bcrypt.compareSync(userInfo.password, user.password);
-      if (!matchPassword) {
-        throw new Error('비밀번호가 틀렸습니다.');
-      }*/
-      const token = jwt.sign({id: user.id, email: user.email},SECRET, {expiresIn:'1h'});
-      res.cookie('token', token, {httpOnly: true, secure: true, maxAge: 3600000})
-      res.status(200).json({success:true, message: '로그인 성공'})
-      res.json(req.body);
-      
+      payload = jwt.verify(token, appConfig.jwtSecret);
+    } catch (err) {
+      console.log('err: ', err);
+      return res.status(401).send('토큰이 만료되었거나 유효하지 않습니다.');
+    }
+
+    const { email } = payload;
+    const user = await usersDb.findUserByEmail(email);
+
+    if (!user) {
+      return res.status(404).send('사용자가 없습니다.');
+    }
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      path: '/',
+    });
+
+    const newToken = jwt.sign(
+      { email: user.email, role_name: user.role_name },
+      appConfig.jwtSecret,
+      { expiresIn: '1h' }, // 만료 시간은 자유롭게 조절
+    );
+
+    // 5) 쿠키에 다시 저장
+    res.cookie('token', newToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      path: '/',
+    });
+
+    res.status(200).json({
+      ok: true,
+      role_name: 'member',
+      member_name: user.member_name,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('유저를 가져오지 못했습니다.');
+  }
+};
+
+// 로그인
+export const login: RequestHandler = async (req, res) => {
+  try {
+    const userInfo = req.body;
+    if (!userInfo.email) {
+      res.status(400).send('이메일 없음');
+    }
+    if (!userInfo.password) {
+      res.status(400).send('비밀번호가 없음');
+    }
+    const user = (await usersDb.findUserByEmail(userInfo.email)) as any;
+    if (!user) {
+      res.status(404).send('존재하지 않는 이메일');
+    }
+    const matchPassword = bcrypt.compareSync(userInfo.password, user.password);
+    if (!matchPassword) {
+      res.status(401).send('비밀번호 불일치');
+    }
+    const token = jwt.sign(
+      { email: user.email, role_name: user.role_name },
+      appConfig.jwtSecret,
+      {
+        expiresIn: '1h',
+      },
+    );
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 3600000,
+    });
+    res.status(200).json({
+      ok: true,
+      message: '로그인 성공',
+      role_name: 'member',
+      member_name: user.member_name,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: '로그인 중 에러 발생' });
+  }
+};
+
+// 로그아웃
+export const logout: RequestHandler = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      res.status(401).send('로그인하지 않은 사용자');
+    }
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      path: '/',
+    });
+    res.status(200).json({ ok: true });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('로그인 에러');
+  }
+};
+
+export const requireLogin: RequestHandler = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).send('로그인하지 않은 사용자');
+    }
+    try {
+      let payload;
+      payload = jwt.verify(token, appConfig.jwtSecret);
+      req.auth = payload;
+      next();
     } catch (error) {
-      console.log(error)
-      res.status(500).json({ message: '로그인 중 에러 발생' })
+      console.log('error: ', error);
+      return res.status(401).send('토큰이 만료되었거나 유효하지 않습니다.');
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send('로그인 에러');
+  }
+};
+
+export const hasRole = (roleName: string) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const { role_name } = req.auth;
+    if (role_name === roleName) {
+      next();
+    } else {
+      return res.status(401).send('로그인 에러');
     }
   };
-
-  // 로그아웃
-  export const logout: RequestHandler = async (req, res) => {
-      try {
-          //res.clearCookie(config.cookieName);
-          res.json({
-              id: 1000,
-              role: "guest",
-          })
-      } catch (error) {
-          console.error(error);
-          return res.status(500).send("로그인 에러");
-      }
-  }
-
-
-  export const signup: RequestHandler = async (req, res) => {
-    try {
-      const user = req.body;
-      console.log('user', user);
-      // 1) user exists
-      const userExist = await authDb.findUserByEmail(user.email);
-      if (userExist) {
-        throw new Error('user가 이미 있습니다.');
-      }
-      // 2) password hash
-      const hash = bcrypt.hashSync(user.password);
-      const result = await authDb.createUser({ ...user, password: hash });
-      res.json(result);
-    } catch (error) {
-      return res.status(500).send("로그인 에러");
-    }
-  };
+};

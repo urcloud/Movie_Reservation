@@ -31,10 +31,10 @@ export type UserExpressRequest = Pick<WithId<UserModel>, 'id'>;
 
 export interface UserModel {
   id: bigint;
-  username: string;
+  member_name: string;
   email: string;
-  full_name: string;
   password: string;
+  birthday: Date;
   role_id: bigint; // FK roles(id)
   created_at: Date;
 }
