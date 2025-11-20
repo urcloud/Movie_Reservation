@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { RequestHandler } from 'express';
 import bcrypt from 'bcryptjs';
-import * as authDb from './auth-db';
+import * as usersDb from '../users/users-db';
 import { appConfig } from '../configs/app-config';
 
 export const getUser: RequestHandler = async (req, res) => {
@@ -20,7 +20,7 @@ export const getUser: RequestHandler = async (req, res) => {
     }
 
     const { email } = payload;
-    const user = await authDb.findUserByEmail(email);
+    const user = await usersDb.findUserByEmail(email);
 
     if (!user) {
       return res.status(404).send('사용자가 없습니다.');
@@ -33,7 +33,7 @@ export const getUser: RequestHandler = async (req, res) => {
     });
 
     const newToken = jwt.sign(
-      { id: user.id, email: user.email },
+      { email: user.email, role_name: user.role_name },
       appConfig.jwtSecret,
       { expiresIn: '1h' }, // 만료 시간은 자유롭게 조절
     );
@@ -67,7 +67,7 @@ export const login: RequestHandler = async (req, res) => {
     if (!userInfo.password) {
       res.status(400).send('비밀번호가 없음');
     }
-    const user = (await authDb.findUserByEmail(userInfo.email)) as any;
+    const user = (await usersDb.findUserByEmail(userInfo.email)) as any;
     if (!user) {
       res.status(404).send('존재하지 않는 이메일');
     }
@@ -76,7 +76,7 @@ export const login: RequestHandler = async (req, res) => {
       res.status(401).send('비밀번호 불일치');
     }
     const token = jwt.sign(
-      { id: user.id, email: user.email },
+      { email: user.email, role_name: user.role_name },
       appConfig.jwtSecret,
       {
         expiresIn: '1h',
@@ -116,46 +116,5 @@ export const logout: RequestHandler = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).send('로그인 에러');
-  }
-};
-
-// 회원가입
-export const signup: RequestHandler = async (req, res) => {
-  try {
-    const user = req.body;
-    // 1) 필수값 누락 확인
-    if (!user.email) {
-      res.status(400).send('이메일 누락');
-    }
-    if (!user.password) {
-      res.status(400).send('비밀번호 누락');
-    }
-    if (!user.member_name) {
-      res.status(400).send('이름 누락');
-    }
-    if (!user.birthday) {
-      res.status(400).send('생년월일 누락');
-    }
-
-    // 2) user exists
-    const userExist = await authDb.findUserByEmail(user.email);
-    if (userExist) {
-      return res.status(409).send('user가 이미 있습니다.');
-    }
-
-    // 3) password hash
-    const hash = bcrypt.hashSync(user.password);
-    const role = await authDb.findRoleByName('member');
-
-    const result = await authDb.createUser({
-      ...user,
-      role_id: role?.id,
-      password: hash,
-    });
-
-    res.status(201).json({ ok: true, message: '회원가입 성공' });
-  } catch (error: any) {
-    console.log('error: ', error);
-    return res.status(500).send(error.message);
   }
 };

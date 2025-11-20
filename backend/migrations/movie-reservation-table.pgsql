@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS role (
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, 
     role_name VARCHAR(10) NOT NULL UNIQUE );
 
--- roles 초기 데이터 삽입
+-- role 초기 데이터 삽입
 INSERT INTO role (role_name) VALUES 
   ('admin'),
   ('member');

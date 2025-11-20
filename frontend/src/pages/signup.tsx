@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useLocation } from 'wouter';
 import { Button } from '../commons/button';
 import { Input } from '../commons/input';
-import { authApi } from '../apis/auth.api';
+import { usersApi } from '../apis/users.api';
 
 export const SignupForm = () => {
-  const { signup } = authApi;
+  const { signup } = usersApi;
   const [, setLocation] = useLocation();
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
