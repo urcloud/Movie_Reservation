@@ -11,7 +11,6 @@ INSERT INTO role (role_name) VALUES
   ('admin'),
   ('member');
 
-
 --users table (user은 예약어라 테이블명 변경 필요)
 --role 가진 user가 있을 시 role 삭제 불가 
 CREATE TABLE IF NOT EXISTS users ( 

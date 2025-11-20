@@ -1,13 +1,22 @@
-// 로그인 상태/유저 정보 유틸 (네 login.tsx가 localStorage에 저장하는 키에 맞춤)
-export const isLoggedIn = () => localStorage.getItem("isLoggedIn") === "true";
-export const userEmail = () => localStorage.getItem("userEmail") || "";
+// src/auth/session.ts
 
-export const login = (email: string) => {
-  localStorage.setItem("isLoggedIn", "true");
-  localStorage.setItem("userEmail", email);
-};
+const USER_EMAIL_KEY = 'userEmail';
 
-export const logout = () => {
-  localStorage.removeItem("isLoggedIn");
-  localStorage.removeItem("userEmail");
-};
+export function getUserEmail(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem(USER_EMAIL_KEY);
+}
+
+export function setUserEmail(email: string) {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(USER_EMAIL_KEY, email);
+}
+
+export function clearUserSession() {
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem(USER_EMAIL_KEY);
+}
+
+export function isLoggedIn(): boolean {
+  return !!getUserEmail();
+}
