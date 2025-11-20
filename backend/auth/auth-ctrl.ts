@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { RequestHandler } from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import * as usersDb from '../users/users-db';
 import { appConfig } from '../configs/app-config';
@@ -25,7 +25,7 @@ export const getUser: RequestHandler = async (req, res) => {
     if (!user) {
       return res.status(404).send('사용자가 없습니다.');
     }
-        res.clearCookie('token', {
+    res.clearCookie('token', {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
@@ -116,5 +116,37 @@ export const logout: RequestHandler = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).send('로그인 에러');
+  }
+};
+
+export const requireLogin: RequestHandler = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).send('로그인하지 않은 사용자');
+    }
+    try {
+      let payload;
+      payload = jwt.verify(token, appConfig.jwtSecret);
+      req.auth = payload;
+      next();
+    } catch (error) {
+      console.log('error: ', error);
+      return res.status(401).send('토큰이 만료되었거나 유효하지 않습니다.');
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send('로그인 에러');
+  }
+};
+
+export const hasRole = (roleName: string) => {
+  return (req: Request, res: Response, next: NextFunction)=>{
+    const {role_name} = req.auth;
+    if(role_name === roleName){
+      next();
+    }else{
+      return res.status(401).send('로그인 에러');
+    }
   }
 };
