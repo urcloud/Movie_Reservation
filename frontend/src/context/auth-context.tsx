@@ -51,8 +51,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       const data = await authApi.logout();
       if (data.ok) {
-        localStorage.removeItem('member_name');
-        localStorage.removeItem('role_name');
+        localStorage.removeItem('user');
         setUser(null);
       }
     } catch (error) {
@@ -72,8 +71,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         };
 
         // 로컬스토리지 동기화
-        localStorage.setItem('member_name', loadedUser.member_name);
-        localStorage.setItem('role_name', loadedUser.role_name);
+        localStorage.setItem('user', JSON.stringify(loadedUser));
 
         setUser(loadedUser);
       } else {
@@ -81,8 +79,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       }
     } catch (error) {
       // 토큰 없음, 만료 등 → 로컬스토리지 정리
-      localStorage.removeItem('member_name');
-      localStorage.removeItem('role_name');
+      localStorage.removeItem('user');
       setUser(null);
     } finally {
       setLoading(false);

@@ -6,20 +6,8 @@ import { appConfig } from '../configs/app-config';
 
 export const getUser: RequestHandler = async (req, res) => {
   try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).send('쿠키에 토큰이 없습니다');
-    }
-
-    let payload: any;
-    try {
-      payload = jwt.verify(token, appConfig.jwtSecret);
-    } catch (err) {
-      console.log('err: ', err);
-      return res.status(401).send('토큰이 만료되었거나 유효하지 않습니다.');
-    }
-
-    const { email } = payload;
+    console.log(req.auth)
+    const { email } = req.auth;
     const user = await usersDb.findUserByEmail(email);
 
     if (!user) {
