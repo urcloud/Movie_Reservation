@@ -5,20 +5,18 @@ import { Button } from '../commons/button';
 
 export const HomeHeader = () => {
   const [, setLocation] = useLocation();
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
-    localStorage.getItem('isLoggedIn') === 'true'
-  );
-  const [userEmail, setUserEmail] = useState<string | null>(
-    localStorage.getItem('userEmail')
-  );
 
-  // ✅ 로그인 상태를 localStorage에서 읽고 실시간으로 갱신
+  const [userEmail, setUserEmail] = useState<string | null>(
+    typeof window !== 'undefined' ? localStorage.getItem('userEmail') : null
+  );
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!userEmail);
+
+  //  로그인 상태를 localStorage에서 읽고 실시간으로 갱신
   useEffect(() => {
     const updateLoginState = () => {
-      const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
       const email = localStorage.getItem('userEmail');
-      setIsLoggedIn(loggedIn);
       setUserEmail(email);
+      setIsLoggedIn(!!email);
     };
 
     // 초기 실행
@@ -27,7 +25,7 @@ export const HomeHeader = () => {
     // 다른 탭(localStorage 변화 감지)
     window.addEventListener('storage', updateLoginState);
 
-    // 같은 탭에서도 즉시 반영되도록 주기적으로 확인
+    // 같은 탭에서도 주기적으로 확인 (필요하면 유지, 아니면 지워도 됨)
     const interval = setInterval(updateLoginState, 1000);
 
     return () => {
@@ -36,14 +34,24 @@ export const HomeHeader = () => {
     };
   }, []);
 
-  // ✅ 로그아웃
+  //  로그아웃
   const handleLogout = () => {
-    localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('userEmail');
     setIsLoggedIn(false);
     setUserEmail(null);
     alert('로그아웃 되었습니다.');
     setLocation('/');
+  };
+
+  // 예매내역 버튼 클릭: 로컬에 이메일 있으면 예매조회, 없으면 로그인
+  const handleReservationsClick = () => {
+    const email = localStorage.getItem('userEmail');
+    if (email) {
+      setLocation('/reservations');
+    } else {
+      alert('로그인이 필요한 서비스입니다.');
+      setLocation('/login');
+    }
   };
 
   return (
@@ -79,18 +87,27 @@ export const HomeHeader = () => {
               >
                 로그아웃
               </Button>
-              <Link to="/reservations">
-                <span className="hover:underline">내 예매내역</span>
-              </Link>
+              {/* 로그인 상태에서도 클릭 로직은 동일하게 handleReservationsClick 사용 */}
+              <button
+                type="button"
+                onClick={handleReservationsClick}
+                className="hover:underline"
+              >
+                내 예매내역
+              </button>
             </>
           ) : (
             <>
               <Link to="/login">
                 <span className="hover:underline">로그인/회원가입</span>
               </Link>
-              <Link to="/reservations">
-                <span className="hover:underline">예매내역조회</span>
-              </Link>
+              <button
+                type="button"
+                onClick={handleReservationsClick}
+                className="hover:underline"
+              >
+                예매내역조회
+              </button>
             </>
           )}
         </nav>
