@@ -2,6 +2,7 @@ import { Button } from '../commons/button';
 import { Input } from '../commons/input';
 import { mockMovies } from '../data/movies';
 import { useParams } from 'wouter';
+import { screeningRegister } from '../../../backend/screening/screening-ctrl';
 
 export const ScreeningRegister = () => {
   const GoBack = () => {
@@ -10,6 +11,7 @@ export const ScreeningRegister = () => {
   const labelStyle = 'block text-sm font-medium text-gray-600 mb-1';
 
   const handleClick = () => {
+    screeningRegister
     alert('등록되었습니다.');
     window.location.href = '/screenings';
   };

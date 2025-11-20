@@ -6,7 +6,7 @@ import { appConfig } from '../configs/app-config';
 
 export const getUser: RequestHandler = async (req, res) => {
   try {
-    console.log(req.auth)
+    console.log(req.auth);
     const { email } = req.auth;
     const user = await usersDb.findUserByEmail(email);
 

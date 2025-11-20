@@ -62,5 +62,5 @@
 명령창에서 다음을 실행하여 테이블들을 만듭니다.
 
 ```bash
-psql -U test -d movie_reservation -f ./backend/migrations/1-create_tables.pgsql
+psql -U test -d movie_reservation -f ./backend/migrations/movie-reservation-table.pgsql
 ```

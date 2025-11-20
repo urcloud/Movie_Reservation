@@ -25,7 +25,7 @@ export const ScreeningEdit = () => {
     alert('수정되었습니다.');
     window.location.href = '/screening';
   };
-  const formatToLocalISO = (isoString: string) => { // 상영관 데이터 추가시 날짜 및 상영관 유효성 검사 추가 필요
+  const formatToLocalISO = (isoString: string) => { // 상영관 데이터 추가시 날짜 및 상영관 유효성 검사 추가 필요 (string끼리 비교)
     if (!isoString) return '';
     const date = new Date(isoString);
     const year = date.getFullYear();
@@ -122,4 +122,4 @@ export const ScreeningEdit = () => {
       </form>
     </div>
   );
-};
+}; 
