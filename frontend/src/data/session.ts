@@ -1,6 +1,5 @@
 // src/auth/session.ts
 
-// 로그인 시 로그인 담당이 이 키들만 맞춰서 저장해주면 됨
 const USER_EMAIL_KEY = 'userEmail';
 
 export function getUserEmail(): string | null {
