@@ -3,5 +3,5 @@ export const appConfig = {
   port: 3000,
   dbUri:
     process.env.DB_CONNECTION ||
-    `postgresql://test:test@localhost:5432/${APP_NAME}`,
+    `postgresql://postgres:root1234@localhost:5432/${APP_NAME}`,
 };
