@@ -1,8 +1,7 @@
 import { Button } from '../commons/button';
 import { Input } from '../commons/input';
-import { mockMovies } from '../data/movies';
 import { useParams } from 'wouter';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export const ScreeningRegister = () => {
   const GoBack = () => {
@@ -12,10 +11,26 @@ export const ScreeningRegister = () => {
 
   const params = useParams();
   const currentMovieId = Number(params.id);
-  const movie = mockMovies.find((m) => m.id === currentMovieId);
-  const movieTitle = movie
-    ? movie.title
-    : '영화 제목 불러오기 실패! 다시 시도해주세요';
+
+  const [movieTitle, setMovieTitle] = useState('로딩 중...');
+  
+  useEffect(() => {
+    const fetchMovieTitle = async () => {
+      try {
+        const response = await fetch(`/api/movie/${currentMovieId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setMovieTitle(data.title);
+        } else {
+          setMovieTitle('영화 정보를 찾을 수 없습니다.');
+        }
+      } catch (error) {
+        console.error('영화 정보 로딩 에러:', error);
+        setMovieTitle('영화 정보를 불러오는 중 오류 발생');
+      }
+    };
+    fetchMovieTitle();
+  }, [currentMovieId]);
 
   const [theaterId, setTheaterId] = useState('1');
   const [screeningDate, setScreeningDate] = useState('');
@@ -24,19 +39,18 @@ export const ScreeningRegister = () => {
   const [ticketPrice, setTicketPrice] = useState('');
 
   const handleRegister = async () => {
-
     if (!screeningDate || !startTime || !endTime || !ticketPrice) {
       alert('모든 정보를 입력해주세요.');
       return;
     }
 
     const payload = {
-      movieid: currentMovieId,
-      theaterid: Number(theaterId),
-      screeningdate: screeningDate,
-      starttime: startTime,
-      endtime: endTime,
-      ticketprice: Number(ticketPrice),
+      movie_id: currentMovieId,         
+      theater_id: Number(theaterId),     
+      screening_date: screeningDate,     
+      start_time: startTime,             
+      end_time: endTime,                
+      ticket_price: Number(ticketPrice),  
     };
 
     try {
@@ -52,7 +66,7 @@ export const ScreeningRegister = () => {
 
       if (response.ok) {
         alert('성공적으로 등록되었습니다.');
-        window.location.href = `/screenings`;
+        window.location.href = `/screening/manage/${currentMovieId}`;
       } else {
         alert(`등록 실패: ${result.message}`);
       }
@@ -84,7 +98,7 @@ export const ScreeningRegister = () => {
           value={theaterId}
           onChange={(e) => setTheaterId(e.target.value)}
         >
-          {/* 상영관 데이터 부재로 하드 코딩 */}
+          {/*현재 로컬 기준 DB에서 상영관 데이터 별도 추가 필요함*/}
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
             <option key={num} value={num}>
               {num}관

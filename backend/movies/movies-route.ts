@@ -1,10 +1,14 @@
 import express from 'express';
-import { getInfo, movieRegister,movieDelete,movieUpdate } from './movies-ctrl';
+import { getAllMovies, getMovie, movieRegister, movieDelete, movieUpdate } from './movies-ctrl'; 
 const router = express.Router();
 
-router.route('/').get(getInfo);
-router.route('/register').post(movieRegister);
-router.route('/delete/:id').delete(movieDelete);
-router.route('/update/:id').put(movieUpdate);
+router.route('/')
+    .get(getAllMovies)
+    .post(movieRegister);
+
+router.route('/:id')
+    .get(getMovie)
+    .put(movieUpdate)
+    .delete(movieDelete);
 
 export default router;

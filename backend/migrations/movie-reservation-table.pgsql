@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS screening (
 --screening_seat table 
 --theater나 seat 삭제 시 screening_seat 데이터도 CASCADE로 삭제 
 CREATE TABLE IF NOT EXISTS screening_seat ( 
-    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, 
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,    
     screening_id INT NOT NULL REFERENCES screening(id) ON DELETE CASCADE, 
     seat_id INT NOT NULL REFERENCES seat(id) ON DELETE CASCADE, 
     theater_id INT NOT NULL REFERENCES theater(id) ON DELETE CASCADE, 

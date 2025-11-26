@@ -1,9 +1,9 @@
 export type Screening = {
-  screeningid: number;
-  movieid: number;
-  theaterid: number;
-  screeningdate: string; //혹은 Date 타입
-  starttime: string;
-  endtime: string;
-  ticketprice: number;
+  screening_id: number;
+  movie_id: number;
+  theater_id: number;
+  screening_date: string;
+  start_time: string;
+  end_time: string;
+  ticket_price: number;
 };
