@@ -2,7 +2,6 @@ import { Button } from '../commons/button';
 import { Input } from '../commons/input';
 import { useState, useEffect } from 'react';
 import { Modal } from '../commons/modal';
-import { useLocation } from 'wouter';
 
 const formatToDate = (isoString: string | Date) => {
   if (!isoString) return '';
@@ -19,8 +18,6 @@ const combineDateAndTime = (dateIso: string, timeStr: string) => {
 };
 
 export const ScreeningEdit = () => {
-  const [, setLocation] = useLocation(); 
-
   const GoBack = () => {
     window.history.back();
   };

@@ -3,6 +3,7 @@ import { Input } from '../commons/input';
 import { useState } from 'react';
 import { Modal } from '../commons/modal';
 
+// Todo - href시 로그아웃 문제,상영정보(시간등) 유효성,중복 검사,어드민 권한 체크?
 const formatDate = (dateString: string) => {
   if (!dateString) return '';
   return dateString.split('T')[0];
