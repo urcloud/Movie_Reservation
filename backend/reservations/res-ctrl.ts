@@ -1,12 +1,19 @@
 import { RequestHandler } from 'express';
 import * as resDb from './res-db';
 
-// 회원 예매 조회: GET /api/reservations/member?email=...
+// 회원 예매 조회: GET /api/reservations/member
+
 export const getMemberReservations: RequestHandler = async (req, res, next) => {
   try {
-    const email = req.query.email as string | undefined;
+    const { email: authEmail } = (req as any).auth || {};
+    const queryEmail = req.query.email as string | undefined;
+
+    // 1순위: 로그인된 email
+    // 2순위: 개발용 쿼리 파라미터 email
+    const email = authEmail ?? queryEmail;
+
     if (!email) {
-      return res.status(400).json({ message: 'email 쿼리 파라미터가 필요합니다.' });
+      return res.status(401).json({ message: '로그인이 필요합니다.(또는 ?email= 쿼리를 넣어 테스트하세요)' });
     }
 
     const items = await resDb.listReservationsByEmail(email);
@@ -15,6 +22,7 @@ export const getMemberReservations: RequestHandler = async (req, res, next) => {
     next(err);
   }
 };
+
 
 // 비회원 예매 조회: POST /api/reservations/guest { email }
 export const postGuestReservations: RequestHandler = async (req, res, next) => {
