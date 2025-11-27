@@ -7,7 +7,6 @@ export const MovieRegister = () => {
     window.history.back();
   };
 
-  // 1. 입력값 State 관리
   const [title, setTitle] = useState('');
   const [director, setDirector] = useState('');
   const [mainActor, setMainActor] = useState('');
@@ -18,29 +17,25 @@ export const MovieRegister = () => {
   const [genre, setGenre] = useState('');
   const [description, setDescription] = useState('');
 
-  // 2. 등록 핸들러 (서버 연동)
   const handleRegister = async () => {
-    // 필수 값 유효성 검사
     if (!title || !director || !mainActor || !releaseDate || !runningTime || !genre) {
       alert('필수 정보를 모두 입력해주세요.');
       return;
     }
 
-    // [중요] 백엔드 DB 컬럼명(snake_case)으로 데이터 구성
     const payload = {
       title,
       director,
-      main_actor: mainActor,              // mainActor -> main_actor
-      release_date: releaseDate,          // releaseDate -> release_date
-      close_date: closeDate,              // closeDate -> close_date
-      running_time: Number(runningTime),  // 숫자로 변환
-      viewing_age: Number(viewingAge),    // 숫자로 변환
+      main_actor: mainActor,             
+      release_date: releaseDate,         
+      close_date: closeDate,              
+      running_time: Number(runningTime), 
+      viewing_age: Number(viewingAge),   
       genre,
       description,
     };
 
     try {
-      // POST 요청 보내기
       const response = await fetch('/api/movie', {
         method: 'POST',
         headers: {
@@ -53,7 +48,7 @@ export const MovieRegister = () => {
 
       if (response.ok) {
         alert('성공적으로 등록되었습니다.');
-        window.location.href = '/movies'; // 목록 화면으로 이동
+        window.location.href = '/movies';
       } else {
         alert(`등록 실패: ${result.message}`);
       }
@@ -99,7 +94,6 @@ export const MovieRegister = () => {
           onChange={(e) => setMainActor(e.target.value)}
         />
         
-        {/* 날짜 입력 라벨 추가 (UX 개선) */}
         <div className='flex flex-col'>
             <label className='text-sm text-gray-600 mb-1 ml-1'>개봉일</label>
             <Input
