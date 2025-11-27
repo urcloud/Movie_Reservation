@@ -3,22 +3,93 @@ import { Input } from '../commons/input';
 import { useState } from 'react';
 import { Modal } from '../commons/modal';
 
+// Todo - href시 로그아웃 문제,상영정보(시간등) 유효성,중복 검사,어드민 권한 체크?
+const formatDate = (dateString: string) => {
+  if (!dateString) return '';
+  return dateString.split('T')[0];
+};
+
 export const MovieEdit = () => {
   const GoBack = () => {
     window.history.back();
   };
-  const handleClick = () => {
-    alert('삭제되었습니다.');
-    window.location.href = '/movies';
-  };
-  const handleEdit = () => {
-    alert('수정되었습니다.');
-    window.location.href = '/movies';
-  };
-  const [movie] = history.state ? [history.state] : [{ movie: '' }];
+
+  const [movie] = history.state ? [history.state] : [{ movie: null }];
 
   const [showModal, setShowModal] = useState(false);
   const labelStyle = 'block text-sm font-medium text-gray-600 mb-1';
+
+  const [title, setTitle] = useState(movie?.title || '');
+  const [director, setDirector] = useState(movie?.director || '');
+  const [mainActor, setMainActor] = useState(movie?.main_actor || movie?.mainActor || '');
+  const [releaseDate, setReleaseDate] = useState(formatDate(movie?.release_date || movie?.releaseDate));
+  const [closeDate, setCloseDate] = useState(formatDate(movie?.close_date || movie?.closeDate));
+  const [runningTime, setRunningTime] = useState(movie?.running_time || movie?.runningTime || '');
+  const [viewingAge, setViewingAge] = useState(movie?.viewing_age || movie?.viewingAge || '');
+  const [genre, setGenre] = useState(movie?.genre || '');
+  const [description, setDescription] = useState(movie?.description || '');
+
+  const handleDelete = async () => {
+    if (!movie || !movie.id) return;
+
+    try {
+      const response = await fetch(`/api/movie/${movie.id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        alert('삭제되었습니다.');
+        window.location.href = '/movies';
+      } else {
+        const result = await response.json();
+        alert(`삭제 실패: ${result.message}`);
+      }
+    } catch (error) {
+      console.error('Error deleting:', error);
+      alert('서버 통신 중 오류가 발생했습니다.');
+    }
+  };
+
+  const handleUpdate = async () => {
+    if (!movie || !movie.id) return;
+
+    const payload = {
+      title,
+      director,
+      main_actor: mainActor,             
+      release_date: releaseDate,         
+      close_date: closeDate,             
+      running_time: Number(runningTime),  
+      viewing_age: Number(viewingAge),    
+      genre,
+      description,
+    };
+
+    try {
+      const response = await fetch(`/api/movie/${movie.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert('수정되었습니다.');
+        window.location.href = '/movies';
+      } else {
+        alert(`수정 실패: ${result.message}`);
+      }
+    } catch (error) {
+      console.error('Error updating:', error);
+      alert('서버 통신 중 오류가 발생했습니다.');
+    }
+  };
+
+  if (!movie) return <div className='pt-20 text-center'>영화 정보를 불러올 수 없습니다.</div>;
+
   return (
     <div className='relative pt-20'>
       <Button
@@ -36,7 +107,8 @@ export const MovieEdit = () => {
             id='title'
             type='text'
             className='border border-gray-300 w-full'
-            defaultValue={movie.title}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
           />
         </div>
         
@@ -46,7 +118,8 @@ export const MovieEdit = () => {
             id='director'
             type='text'
             className='border border-gray-300 w-full'
-            defaultValue={movie.director}
+            value={director}
+            onChange={(e) => setDirector(e.target.value)}
           />
         </div>
 
@@ -56,7 +129,8 @@ export const MovieEdit = () => {
             id='mainActor'
             type='text'
             className='border border-gray-300 w-full'
-            defaultValue={movie.mainActor}
+            value={mainActor}
+            onChange={(e) => setMainActor(e.target.value)}
           />
         </div>
 
@@ -66,7 +140,8 @@ export const MovieEdit = () => {
             id='releaseDate'
             type='date'
             className='border border-gray-300 w-full'
-            defaultValue={movie.releaseDate}
+            value={releaseDate}
+            onChange={(e) => setReleaseDate(e.target.value)}
           />
         </div>
 
@@ -76,7 +151,8 @@ export const MovieEdit = () => {
             id='closeDate'
             type='date'
             className='border border-gray-300 w-full'
-            defaultValue={movie.closeDate}
+            value={closeDate}
+            onChange={(e) => setCloseDate(e.target.value)}
           />
         </div>
 
@@ -86,17 +162,19 @@ export const MovieEdit = () => {
             id='runningTime'
             type='number'
             className='border border-gray-300 w-full'
-            defaultValue={movie.runningTime}
+            value={runningTime}
+            onChange={(e) => setRunningTime(e.target.value)}
           />
         </div>
 
         <div>
-          <label htmlFor='viewingAge' className={labelStyle}>관람 등급</label>
+          <label htmlFor='viewingAge' className={labelStyle}>관람 등급 (전체이용가일 경우 0 입력)</label>
           <Input
             id='viewingAge'
             type='number'
             className='border border-gray-300 w-full'
-            defaultValue={movie.viewingAge}
+            value={viewingAge}
+            onChange={(e) => setViewingAge(e.target.value)}
           />
         </div>
 
@@ -106,7 +184,8 @@ export const MovieEdit = () => {
             id='genre'
             type='text'
             className='border border-gray-300 w-full'
-            defaultValue={movie.genre}
+            value={genre}
+            onChange={(e) => setGenre(e.target.value)}
           />
         </div>
 
@@ -115,7 +194,8 @@ export const MovieEdit = () => {
           <textarea
             id='description'
             className='border border-gray-300 h-100 w-full'
-            defaultValue={movie.description}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
         </div>
 
@@ -137,7 +217,7 @@ export const MovieEdit = () => {
         <Button 
           type='button'
           className='bg-white text-gray-700 border border-gray-300 p-2 rounded hover:bg-gray-50'
-          onClick={handleEdit}
+          onClick={handleUpdate}
         >
           수정
         </Button>
@@ -151,7 +231,7 @@ export const MovieEdit = () => {
         {showModal && (
           <Modal onClose={() => setShowModal(false)}>
             <div>삭제하시겠습니까?</div>
-            <Button type='button' className='w-1/2' onClick={handleClick}>
+            <Button type='button' className='w-1/2' onClick={handleDelete}>
               삭제
             </Button>
           </Modal>

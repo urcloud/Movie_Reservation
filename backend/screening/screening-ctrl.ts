@@ -1,16 +1,6 @@
 import { RequestHandler } from 'express';
 import * as screeningDb from './screening-db';
 
-export const getAllScreenings: RequestHandler = async (req, res) => {
-  try {
-    const result = await screeningDb.getScreenings();
-    res.status(200).json(result);
-  } catch (error) {
-    console.error(error);
-    res.send({ message: '오류가 발생했습니다.', error });
-  }
-};
-
 export const getScreening: RequestHandler = async (req, res) => {
   const { id } = req.params;
   try {
@@ -27,12 +17,24 @@ export const getScreening: RequestHandler = async (req, res) => {
   }
 };
 
+export const getScreeningsByMovie: RequestHandler = async (req, res) => {
+  try {
+    const { movie_id } = req.query;
+    if (!movie_id) {
+      return res.status(200).json([]); 
+    }
+    const result = await screeningDb.getScreeningsByMovieId(String(movie_id));
+    res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    res.send({ message: '오류가 발생했습니다.', error });
+  }
+};
+
 export const screeningRegister: RequestHandler = async (req, res) => {
   // 401 로그인하지 않은 사용자, 403 권한없는 사용자 체크 필요
-  // 로그인여부 판별,관리자 여부 판별 함수 auth/ctrl에서 구현후 import 해서 사용
-
-  const { movieid, theaterid, screeningdate, starttime, endtime, ticketprice } = req.body;
-  if (!movieid || !theaterid || !screeningdate || !starttime || !endtime || !ticketprice) {
+  const { movie_id, theater_id, screening_date, start_time, end_time, ticket_price } = req.body;
+  if (!movie_id || !theater_id || !screening_date || !start_time || !end_time || !ticket_price) {
     return res.status(400).send({
       message: '잘못된 요청입니다. 필수 값이 누락되었습니다. (movieid, theaterid 등)',
     });

@@ -64,3 +64,13 @@
 ```bash
 psql -U test -d movie_reservation -f ./backend/migrations/movie-reservation-table.pgsql
 ```
+## 테이블 드랍
+1. 다음을 실행하여 `postgres` user로 로그인합니다.
+
+   ```bash
+   $ psql -U postgres
+   ```
+2. 테이블 드랍 (서버나 postgresql 꺼져있어야 함)
+   ```bash
+   drop database movie_reservation;
+   ```
