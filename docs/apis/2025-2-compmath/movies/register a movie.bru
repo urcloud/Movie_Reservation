@@ -1,0 +1,36 @@
+meta {
+  name: register a movie
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/api/movie
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "user_email": "user@example.com",
+    "title": "아무영화",
+    "description": "아무아여",
+    "release_date": "2025-09-01",       
+    "close_date": "2025-09-10",         
+    "running_time": 120,
+    "viewing_age": 12,
+    "genre": "드라마",
+    "director": "영화감독",
+    "main_actor": "김말순",
+    "created_at": "2025-11-27"
+  }
+}
+
+vars:pre-request {
+  : 
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
