@@ -1,10 +1,10 @@
 import bcrypt from "bcryptjs";
 import { RequestHandler } from "express";
 import * as usersDb from './users-db';
+import { HttpError } from "../helpers/error-helper";
 
 // 회원가입
 export const signup: RequestHandler = async (req, res) => {
-  try {
     const user = req.body;
     // 1) 필수값 누락 확인
     if (!user.email) {
@@ -14,7 +14,9 @@ export const signup: RequestHandler = async (req, res) => {
       res.status(400).send('비밀번호 누락');
     }
     if (!user.member_name) {
-      res.status(400).send('이름 누락');
+      res.status(400)
+      throw new HttpError(400,'이름 누락');
+      // res.status(400).send('이름 누락');
     }
     if (!user.birthday) {
       res.status(400).send('생년월일 누락');
@@ -37,8 +39,4 @@ export const signup: RequestHandler = async (req, res) => {
     });
 
     res.status(201).json({ ok: true, message: '회원가입 성공' });
-  } catch (error: any) {
-    console.log('error: ', error);
-    return res.status(500).send(error.message);
-  }
 };

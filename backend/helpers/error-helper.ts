@@ -33,10 +33,22 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     res.status(400).json({
       errors: formattedError,
     });
-  } else {
+  } else if(err instanceof HttpError){
+    res.status(err.code)
+    res.json({ errors: err.message });
+  }
+  else {
     res.status(400).json({
       errors: { errors: [err.message] },
       stack: process.env.NODE_ENV === 'production' ? null : err.stack,
     });
   }
 };
+
+export class HttpError extends Error {
+  code: number;
+  constructor(code:number, message: string){
+    super(message)
+    this.code = code;
+  }
+  };
