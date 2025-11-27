@@ -1,6 +1,14 @@
 import { ErrorRequestHandler } from 'express';
 import { treeifyError, z } from 'zod/v4';
 
+export class HttpError extends Error {
+  code: number;
+  constructor(code: number, message: string) {
+    super(message);
+    this.code = code;
+  }
+}
+
 z.config({
   customError: (issue) => {
     if (issue.code === 'invalid_type') {
@@ -32,6 +40,10 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     console.log('formattedError', JSON.stringify(formattedError, null, 2));
     res.status(400).json({
       errors: formattedError,
+    });
+  } else if (err instanceof HttpError) {
+    res.status(err.code).json({
+      errors: err.message,
     });
   } else {
     res.status(400).json({
