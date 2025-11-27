@@ -3,13 +3,13 @@ export interface Movie {
   userId: number; // ERD: userID LONG
   title: string; // ERD: title VARCHAR
   description: string; // ERD: description TEXT
-  releaseDate: string; // ERD: release_date DATE
-  closeDate: string; // ERD: closeDate DATE
-  runningTime: number; // ERD: runningTime LONG
-  viewingAge: number; // ERD: viewingAge INT
+  release_date: string; // ERD: release_date DATE
+  close_date: string; // ERD: closeDate DATE
+  running_time: number; // ERD: runningTime LONG
+  viewing_age: number; // ERD: viewingAge INT
   genre: string; // ERD: genre VARCHAR
   director: string; // ERD: director VARCHAR
-  mainActor: string; // ERD: mainActor TEXT
-  createdAt: string; // ERD: createdAt DATETIME
-  modifiedAt: string; // ERD: modifiedAt DATETIME
+  main_actor: string; // ERD: mainActor TEXT
+  created_at: string; // ERD: createdAt DATETIME
+  modified_at: string; // ERD: modifiedAt DATETIME
 }
