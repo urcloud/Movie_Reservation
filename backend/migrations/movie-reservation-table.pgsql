@@ -1,5 +1,5 @@
 --ENUM TYPE 정의 
-CREATE TYPE IF NOT EXISTS reservation_status_enum AS ENUM ('CONFIRMED', 'CANCELED');
+CREATE TYPE reservation_status_enum AS ENUM ('CONFIRMED', 'CANCELED');
 
 --role table 
 CREATE TABLE IF NOT EXISTS role ( 
