@@ -16,6 +16,7 @@ export const MovieReservation = () => {
   const [theater, setTheater] = useState<Theater | null>(null);
   const [seatLayout, setSeatLayout] = useState<ScreeningSeat[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
+  const [selectedSeatNumbers, setSelectedSeatNumbers] = useState<string[]>([]);
   const [showSeats, setShowSeats] = useState(false);
 
   useEffect(() => {
@@ -55,6 +56,15 @@ export const MovieReservation = () => {
         ? prev.filter((id) => id !== screeningSeatId)
         : [...prev, screeningSeatId]
     );
+
+    const seat = seatLayout.find((s) => s.id === screeningSeatId);
+    if (!seat) return;
+
+    setSelectedSeatNumbers((prev) =>
+      prev.includes(seat.seat_number)
+        ? prev.filter((n) => n !== seat.seat_number)
+        : [...prev, seat.seat_number]
+    );
   };
 
   const handleBooking = () => {
@@ -65,6 +75,7 @@ export const MovieReservation = () => {
     }
 
     localStorage.setItem("selectedSeats", JSON.stringify(selectedSeats));
+    localStorage.setItem("selectedSeatNumbers", JSON.stringify(selectedSeatNumbers));
     localStorage.setItem("screeningId", String(selectedScreening.id));
 
     navigate(`/booking/${selectedScreening.id}/payment`);
@@ -76,11 +87,10 @@ export const MovieReservation = () => {
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold mb-4">🎬 영화 예매</h1>
           <p className="text-lg mb-4">
-  영화: <strong>{screenings[0]?.movie_title}</strong>
-</p>
+            영화: <strong>{screenings[0]?.movie_title}</strong>
+          </p>
         </div>
 
-        {/* 상영 선택 단계 */}
         {!showSeats && (
           <div className="flex flex-col items-center space-y-4">
             <h2 className="text-xl font-semibold mb-2">상영 시간 선택</h2>
@@ -112,7 +122,6 @@ export const MovieReservation = () => {
           </div>
         )}
 
-        {/* 좌석 선택 단계 */}
         {showSeats && selectedScreening && theater && (
           <div className="mt-6 text-center">
             <h2 className="text-xl font-bold mb-4">
@@ -123,7 +132,6 @@ export const MovieReservation = () => {
               스크린
             </div>
 
-            {/* 좌석 배치 */}
             <div className="flex flex-col items-center justify-center mt-4 w-full">
               {Array.from({ length: theater.seat_row }).map((_, rowIdx) => {
                 const start = rowIdx * theater.seat_col;

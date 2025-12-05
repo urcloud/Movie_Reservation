@@ -16,17 +16,22 @@ export const MoviePayment = () => {
 
   useEffect(() => {
     const seats = localStorage.getItem("selectedSeats");
+    const numbers = localStorage.getItem("selectedSeatNumbers");
+
     if (seats) setSelectedSeats(JSON.parse(seats));
+    if (numbers) setSeatNumbers(JSON.parse(numbers));
 
     const fetchData = async () => {
       try {
         const screeningRes = await fetch(`/api/screenings/${id}`);
         const screeningData = await screeningRes.json();
-        setScreening(screeningData);
 
-        const movieRes = await fetch(`/api/movies/${screeningData.movieId}`);
+        setScreening(screeningData.screening);
+
+        const movieRes = await fetch(`/api/screenings/${id}/movie`);
         const movieData = await movieRes.json();
-        setMovie(movieData);
+
+        setMovie(movieData.movie);
       } catch (err) {
         console.error("데이터 로딩 오류:", err);
       }
@@ -34,27 +39,6 @@ export const MoviePayment = () => {
 
     fetchData();
   }, [id]);
-
-  useEffect(() => {
-    const fetchSeatNumbers = async () => {
-      if (selectedSeats.length === 0) return;
-
-      try {
-        const res = await fetch(`/api/screening-seats/convert`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ screeningSeatIds: selectedSeats }),
-        });
-
-        const data = await res.json();
-        setSeatNumbers(data);
-      } catch (err) {
-        console.error("좌석 변환 오류:", err);
-      }
-    };
-
-    fetchSeatNumbers();
-  }, [selectedSeats]);
 
   const handleReservation = () => {
     if (!email) {
