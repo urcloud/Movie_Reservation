@@ -1,9 +1,9 @@
 import express from "express";
 import { ScreeningService, ScreeningSeatService, ReservationService, MovieService, TheaterService } from "../reservations/make-reservation-service";
+import { requireLogin } from "../auth/auth-ctrl";
 
 export const makeReservationRouter = express.Router();
 
-// GET /api/screenings?movie_id=id
 makeReservationRouter.get("/screenings", async (req, res) => {
   try {
     const movieId = Number(req.query.movie_id);
@@ -14,7 +14,6 @@ makeReservationRouter.get("/screenings", async (req, res) => {
   }
 });
 
-// GET /api/screenings/:id
 makeReservationRouter.get("/screenings/:id", async (req, res) => {
   try {
     const row = await ScreeningService.getById(Number(req.params.id));
@@ -24,7 +23,6 @@ makeReservationRouter.get("/screenings/:id", async (req, res) => {
   }
 });
 
-// GET /api/screenings/:id/seats
 makeReservationRouter.get("/screenings/:id/seats", async (req, res) => {
   try {
     const seats = await ScreeningSeatService.listByScreeningId(Number(req.params.id));
@@ -34,10 +32,20 @@ makeReservationRouter.get("/screenings/:id/seats", async (req, res) => {
   }
 });
 
-// POST /api/reservations
-makeReservationRouter.post("/reservations", async (req, res) => {
+makeReservationRouter.post("/reservations", requireLogin, async (req, res) => {
   try {
-    const result = await ReservationService.create(req.body);
+    const auth = (req as any).auth;
+    const email: string | undefined = auth?.email;
+
+    if (!email) {
+      return res.status(401).json({ success: false, message: "로그인이 필요합니다." });
+    }
+
+    const result = await ReservationService.create({
+      email,
+      screening_seat_ids: req.body.screening_seat_ids,
+    });
+
     res.status(201).json({ success: true, reservations: result });
   } catch (err: any) {
     res.status(err.statusCode || 500).json({
@@ -48,7 +56,6 @@ makeReservationRouter.post("/reservations", async (req, res) => {
   }
 });
 
-// GET /api/screenings/:id/movie
 makeReservationRouter.get("/screenings/:id/movie", async (req, res) => {
   try {
     const screeningId = Number(req.params.id);
@@ -63,7 +70,6 @@ makeReservationRouter.get("/screenings/:id/movie", async (req, res) => {
   }
 });
 
-// GET /api/theaters/:id
 makeReservationRouter.get("/screenings/:id/theater", async (req, res) => {
   try {
     const screeningId = Number(req.params.id);

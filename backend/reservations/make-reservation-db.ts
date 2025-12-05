@@ -81,29 +81,40 @@ async markSeatsUnreserved(screeningSeatIds: number[]): Promise<number> {
 },
 
   async createReservations(email: string, screeningSeatIds: number[]): Promise<Reservation[]> {
-    if (screeningSeatIds.length === 0) return [];
-    const placeholders = screeningSeatIds.map((_, i) => `$${i + 1}`).join(", ");
-    const selectText = `SELECT id AS seat_id, screening_id, theater_id FROM screening_seat WHERE id IN (${placeholders})`;
-    const seatsResult = await query<{ seat_id: number; screening_id: number; theater_id: number }>(selectText, screeningSeatIds);
-    const now = new Date().toISOString();
+  if (screeningSeatIds.length === 0) return [];
 
-    const values: any[] = [];
-    const valueStrings: string[] = [];
-    seatsResult.rows.forEach((seat, idx) => {
-      values.push(email, seat.seat_id, seat.seat_id, seat.screening_id, seat.theater_id, now);
-      const baseIdx = idx * 6;
-      valueStrings.push(`($${baseIdx + 1}, $${baseIdx + 2}, $${baseIdx + 3}, $${baseIdx + 4}, $${baseIdx + 5}, $${baseIdx + 6})`);
-    });
+  const placeholders = screeningSeatIds.map((_, i) => `$${i + 1}`).join(", ");
+  const selectText = `SELECT id AS screening_seat_id, seat_id, screening_id, theater_id FROM screening_seat WHERE id IN (${placeholders})`;
+  const seatsResult = await query<{
+    screening_seat_id: number;
+    seat_id: number;
+    screening_id: number;
+    theater_id: number;
+  }>(selectText, screeningSeatIds);
 
-    const insertText = `
-      INSERT INTO reservation (email, screening_seat_id, seat_id, screening_id, theater_id, created_at)
-      VALUES ${valueStrings.join(", ")}
-      RETURNING *
-    `;
+  if (seatsResult.rows.length !== screeningSeatIds.length) {
+    throw { statusCode: 400, message: "요청한 screening_seat_id 중 일부가 존재하지 않습니다." };
+  }
 
-    const result = await query<Reservation>(insertText, values);
-    return result.rows;
-  },
+  const now = new Date().toISOString();
+
+  const values: any[] = [];
+  const valueStrings: string[] = [];
+  seatsResult.rows.forEach((seat, idx) => {
+    values.push(email, seat.screening_seat_id, seat.seat_id, seat.screening_id, seat.theater_id, now);
+    const baseIdx = idx * 6;
+    valueStrings.push(`($${baseIdx + 1}, $${baseIdx + 2}, $${baseIdx + 3}, $${baseIdx + 4}, $${baseIdx + 5}, $${baseIdx + 6})`);
+  });
+
+  const insertText = `
+    INSERT INTO reservation (email, screening_seat_id, seat_id, screening_id, theater_id, created_at)
+    VALUES ${valueStrings.join(", ")}
+    RETURNING *
+  `;
+
+  const result = await query<Reservation>(insertText, values);
+  return result.rows;
+},
 
   async findMovieById(movieId: number): Promise<Movie | null> {
   const text = `SELECT * FROM movie WHERE id=$1`;
