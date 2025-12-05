@@ -1,5 +1,5 @@
 export interface Seat {
-  seatId: number;
-  theaterId: number;
-  seatNumber: string;
+  seat_id: number;
+  theater_id: number;
+  seat_number: string;
 }

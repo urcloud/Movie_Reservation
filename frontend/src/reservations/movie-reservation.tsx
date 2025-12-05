@@ -3,11 +3,7 @@ import { useParams, useLocation } from "wouter";
 import { PageLayout } from "../layouts/page-layout";
 import { ContentLayout } from "../layouts/content-layout";
 import { Button } from "../commons/button";
-import { mockScreenings } from "../data/screenings";
-import { mockTheaters } from "../data/theaters";
-import { mockScreeningSeats } from "../data/screeningSeats";
-import { mockSeats } from "../data/seats";
-import type { Screening } from "../models/screening";
+import type { Screening, ScreeningWithTheater } from "../models/screening";
 import type { ScreeningSeat } from "../models/screeningSeat";
 import type { Theater } from "../models/theater";
 
@@ -15,33 +11,42 @@ export const MovieReservation = () => {
   const { id } = useParams<{ id: string }>();
   const [, navigate] = useLocation();
 
-  const [screenings, setScreenings] = useState<Screening[]>([]);
+  const [screenings, setScreenings] = useState<ScreeningWithTheater[]>([]);
   const [selectedScreening, setSelectedScreening] = useState<Screening | null>(null);
   const [theater, setTheater] = useState<Theater | null>(null);
   const [seatLayout, setSeatLayout] = useState<ScreeningSeat[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
   const [showSeats, setShowSeats] = useState(false);
 
-  // 해당 영화의 상영 목록만 필터링
   useEffect(() => {
-    const filtered = mockScreenings.filter((s) => s.movieId === Number(id));
-    setScreenings(filtered);
+    const fetchScreenings = async () => {
+      try {
+        const res = await fetch(`/api/screenings?movie_id=${id}`);
+        const data = await res.json();
+        setScreenings(data.screenings || []);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchScreenings();
   }, [id]);
 
-  // 상영 선택 시 실행
-  const handleSelectScreening = (screening: Screening) => {
+  const handleSelectScreening = async (screening: Screening) => {
     setSelectedScreening(screening);
-    const t = mockTheaters.find((t) => t.theaterId === screening.theaterId);
-    setTheater(t || null);
 
-    // 해당 상영관 좌석 가져오기
-    const layout = mockScreeningSeats.filter(
-      (seat) =>
-        seat.theaterId === screening.theaterId &&
-        seat.screeningId === screening.screeningId
-    );
-    setSeatLayout(layout);
-    setShowSeats(true);
+    try {
+      const theaterRes = await fetch(`/api/screenings/${screening.id}/theater`);
+      const theaterData = await theaterRes.json();
+      setTheater(theaterData.theater || null);
+
+      const seatsRes = await fetch(`/api/screenings/${screening.id}/seats`);
+      const seatsData = await seatsRes.json();
+      setSeatLayout(seatsData.seats || []);
+
+      setShowSeats(true);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const toggleSeatSelection = (screeningSeatId: number) => {
@@ -60,9 +65,9 @@ export const MovieReservation = () => {
     }
 
     localStorage.setItem("selectedSeats", JSON.stringify(selectedSeats));
-    localStorage.setItem("screeningId", String(selectedScreening.screeningId));
+    localStorage.setItem("screeningId", String(selectedScreening.id));
 
-    navigate(`/booking/${selectedScreening.screeningId}/payment`);
+    navigate(`/booking/${selectedScreening.id}/payment`);
   };
 
   return (
@@ -70,7 +75,9 @@ export const MovieReservation = () => {
       <ContentLayout>
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold mb-4">🎬 영화 예매</h1>
-          <p className="text-lg mb-4">영화 번호: {id}</p>
+          <p className="text-lg mb-4">
+  영화: <strong>{screenings[0]?.movie_title}</strong>
+</p>
         </div>
 
         {/* 상영 선택 단계 */}
@@ -81,17 +88,18 @@ export const MovieReservation = () => {
 
             {screenings.map((s) => (
               <div
-                key={s.screeningId}
+                key={s.id}
                 className="border p-4 rounded w-[90%] md:w-[60%] flex justify-between items-center"
               >
                 <div>
                   <p>
-                    상영일: <strong>{s.screeningDate.toLocaleDateString()}</strong>
+                    상영일: <strong>{new Date(s.screening_date).toLocaleDateString()}</strong>
                   </p>
                   <p>
-                    시간: {s.startTime} ~ {s.endTime}
+                    시간: {s.start_time} ~ {s.end_time}
                   </p>
-                  <p>가격: {s.ticketPrice.toLocaleString()}원</p>
+                  <p>가격: {s.ticket_price.toLocaleString()}원</p>
+                  <p>상영관: {s.theater_name}</p>
                 </div>
                 <Button
                   className="bg-blue-500 text-white px-4 py-2 rounded"
@@ -108,51 +116,43 @@ export const MovieReservation = () => {
         {showSeats && selectedScreening && theater && (
           <div className="mt-6 text-center">
             <h2 className="text-xl font-bold mb-4">
-              🎟 {theater.theaterName} 좌석 선택
+              🎟 {theater.theater_name} 좌석 선택
             </h2>
 
             <div className="bg-gray-200 py-2 mb-4 rounded font-semibold">
               스크린
             </div>
 
-            {/* 좌석 구역 3등분 배치 */}
+            {/* 좌석 배치 */}
             <div className="flex flex-col items-center justify-center mt-4 w-full">
-              {Array.from({ length: theater.seatRow }).map((_, rowIdx) => {
-                const rowSeats = seatLayout.slice(
-                  rowIdx * theater.seatCol,
-                  (rowIdx + 1) * theater.seatCol
-                );
+              {Array.from({ length: theater.seat_row }).map((_, rowIdx) => {
+                const start = rowIdx * theater.seat_col;
+                const end = (rowIdx + 1) * theater.seat_col;
+                const rowSeats = seatLayout.slice(start, end);
 
-                const totalCols = rowSeats.length;
-                const third = Math.floor(totalCols / 3);
-                const remainder = totalCols % 3;
+                const third = Math.floor(rowSeats.length / 3);
+                const remainder = rowSeats.length % 3;
 
-                const leftCount = third;
-                const centerCount = third + remainder;
+                const leftSeats = rowSeats.slice(0, third);
+                const centerSeats = rowSeats.slice(third, third + third + remainder);
+                const rightSeats = rowSeats.slice(third + third + remainder);
 
-                const leftSeats = rowSeats.slice(0, leftCount);
-                const centerSeats = rowSeats.slice(leftCount, leftCount + centerCount);
-                const rightSeats = rowSeats.slice(leftCount + centerCount);
-
-                const renderSeat = (screeningSeat: ScreeningSeat) => {
-                  const seatInfo = mockSeats.find((s) => s.seatId === screeningSeat.seatId);
-                  const seatLabel = seatInfo?.seatNumber || screeningSeat.seatId;
-
+                const renderSeat = (seat: ScreeningSeat) => {
                   return (
                     <button
-                      key={screeningSeat.screeningSeatId}
-                      onClick={() => toggleSeatSelection(screeningSeat.screeningSeatId)}
-                      disabled={screeningSeat.isReserved}
+                      key={seat.id}
+                      onClick={() => toggleSeatSelection(seat.id)}
+                      disabled={seat.is_reserved}
                       className={`w-8 h-8 rounded text-xs font-medium flex items-center justify-center
                         ${
-                          screeningSeat.isReserved
+                          seat.is_reserved
                             ? "bg-red-600 text-white cursor-not-allowed"
-                            : selectedSeats.includes(screeningSeat.screeningSeatId)
+                            : selectedSeats.includes(seat.id)
                             ? "bg-blue-500 text-white"
                             : "bg-gray-300 text-black"
                         }`}
                     >
-                      {seatLabel}
+                      {seat.seat_number}
                     </button>
                   );
                 };
@@ -167,7 +167,6 @@ export const MovieReservation = () => {
               })}
             </div>
 
-            {/* 안내 색상 */}
             <div className="flex justify-center space-x-6 mt-6 text-sm">
               <div className="flex items-center space-x-1">
                 <div className="w-4 h-4 bg-gray-300 rounded" />

@@ -67,3 +67,14 @@ export const MovieService = {
     return movie;
   },
 };
+
+export const TheaterService = {
+  async getById(theaterId: number) {
+    if (!theaterId) throw { statusCode: 400, message: "theater_id required" };
+
+    const theater = await Repository.findTheaterById(theaterId);
+    if (!theater) throw { statusCode: 404, message: "theater not found" };
+
+    return theater;
+  }
+};

@@ -3,10 +3,6 @@ import { useParams } from "wouter";
 import { PageLayout } from "../layouts/page-layout";
 import { ContentLayout } from "../layouts/content-layout";
 import { Button } from "../commons/button";
-import { mockMovies } from "../data/movies";
-import { mockScreenings } from "../data/screenings";
-import { mockSeats } from "../data/seats";
-import { mockScreeningSeats } from "../data/screeningSeats";
 import type { Movie } from "../models/movie";
 import type { Screening } from "../models/screening";
 
@@ -22,30 +18,42 @@ export const MoviePayment = () => {
     const seats = localStorage.getItem("selectedSeats");
     if (seats) setSelectedSeats(JSON.parse(seats));
 
-    const foundScreening = mockScreenings.find(
-      (s) => s.screeningId === Number(id)
-    );
-    setScreening(foundScreening || null);
+    const fetchData = async () => {
+      try {
+        const screeningRes = await fetch(`/api/screenings/${id}`);
+        const screeningData = await screeningRes.json();
+        setScreening(screeningData);
 
-    if (foundScreening) {
-      const foundMovie = mockMovies.find(
-        (m) => m.id === foundScreening.movieId
-      );
-      setMovie(foundMovie || null);
-    }
+        const movieRes = await fetch(`/api/movies/${screeningData.movieId}`);
+        const movieData = await movieRes.json();
+        setMovie(movieData);
+      } catch (err) {
+        console.error("데이터 로딩 오류:", err);
+      }
+    };
+
+    fetchData();
   }, [id]);
 
-  // 선택된 screeningSeatId를 seatNumber로 변환
   useEffect(() => {
-    const numbers = selectedSeats.map((screeningSeatId) => {
-      const screeningSeat = mockScreeningSeats.find(
-        (s) => s.screeningSeatId === screeningSeatId
-      );
-      if (!screeningSeat) return screeningSeatId.toString();
-      const seat = mockSeats.find((s) => s.seatId === screeningSeat.seatId);
-      return seat?.seatNumber || screeningSeat.seatId.toString();
-    });
-    setSeatNumbers(numbers);
+    const fetchSeatNumbers = async () => {
+      if (selectedSeats.length === 0) return;
+
+      try {
+        const res = await fetch(`/api/screening-seats/convert`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ screeningSeatIds: selectedSeats }),
+        });
+
+        const data = await res.json();
+        setSeatNumbers(data);
+      } catch (err) {
+        console.error("좌석 변환 오류:", err);
+      }
+    };
+
+    fetchSeatNumbers();
   }, [selectedSeats]);
 
   const handleReservation = () => {
@@ -54,7 +62,7 @@ export const MoviePayment = () => {
       return;
     }
     alert(
-      `예매 완료!\n영화: ${movie?.title}\n상영관: ${screening?.theaterId}관\n좌석: ${seatNumbers.join(
+      `예매 완료!\n영화: ${movie?.title}\n상영관: ${screening?.theater_id}관\n좌석: ${seatNumbers.join(
         ", "
       )}`
     );
@@ -83,13 +91,13 @@ export const MoviePayment = () => {
               영화제목: <strong>{movie.title}</strong>
             </p>
             <p>장르: {movie.genre}</p>
-            <p>상영관: {screening.theaterId}관</p>
+            <p>상영관: {screening.theater_id}관</p>
             <p>
-              상영 시간: {screening.startTime} ~ {screening.endTime}
+              상영 시간: {screening.start_time} ~ {screening.end_time}
             </p>
             <p>선택 좌석: {seatNumbers.join(", ")}</p>
             <p>
-              총 금액: {(selectedSeats.length * screening.ticketPrice).toLocaleString()}원
+              총 금액: {(selectedSeats.length * screening.ticket_price).toLocaleString()}원
             </p>
           </div>
 

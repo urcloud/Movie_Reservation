@@ -1,7 +1,7 @@
 export interface Theater {
-  theaterId: number;
-  theaterName: string;
-  totalSeats: number;
-  seatRow: number;
-  seatCol: number;
+  theater_id: number;
+  theater_name: string;
+  total_seats: number;
+  seat_row: number;
+  seat_col: number;
 }

@@ -16,6 +16,10 @@ export interface ScreeningSeat {
   is_reserved: boolean;
 }
 
+export interface ScreeningSeatWithNumber extends ScreeningSeat {
+  seat_number: string;
+}
+
 export interface Seat {
   id: number;
   theater_id: number;

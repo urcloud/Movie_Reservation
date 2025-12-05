@@ -1,5 +1,5 @@
 import express from "express";
-import { ScreeningService, ScreeningSeatService, ReservationService, MovieService } from "../reservations/make-reservation-service";
+import { ScreeningService, ScreeningSeatService, ReservationService, MovieService, TheaterService } from "../reservations/make-reservation-service";
 
 export const makeReservationRouter = express.Router();
 
@@ -55,6 +55,21 @@ makeReservationRouter.get("/screenings/:id/movie", async (req, res) => {
     const screening = await ScreeningService.getById(screeningId);
     const movie = await MovieService.getById(screening.movie_id);
     res.json({ movie });
+  } catch (err: any) {
+    res.status(err.statusCode || 500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
+
+// GET /api/theaters/:id
+makeReservationRouter.get("/screenings/:id/theater", async (req, res) => {
+  try {
+    const screeningId = Number(req.params.id);
+    const screening = await ScreeningService.getById(screeningId);
+    const theater = await TheaterService.getById(screening.theater_id);
+    res.json({ theater });
   } catch (err: any) {
     res.status(err.statusCode || 500).json({
       success: false,

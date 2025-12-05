@@ -1,24 +1,56 @@
 import { query } from "../dbs/database";
-import { Screening, ScreeningSeat, Reservation, Movie } from "../reservations/make-reservation-model";
+import { Screening, ScreeningSeat, Reservation, Movie, Theater, ScreeningSeatWithNumber } from "../reservations/make-reservation-model";
 
 export const Repository = {
-  async findScreeningsByMovieId(movieId: number): Promise<Screening[]> {
-    const text = `SELECT * FROM screening WHERE movie_id=$1 ORDER BY screening_date, start_time`;
-    const result = await query<Screening>(text, [movieId]);
-    return result.rows;
-  },
+  async findScreeningsByMovieId(movieId: number): Promise<any[]> {
+  const text = `
+    SELECT 
+      s.*,
+      m.title AS movie_title,
+      t.theater_name,
+      t.seat_row,
+      t.seat_col,
+      t.total_seats
+    FROM screening s
+    JOIN movie m ON s.movie_id = m.id
+    JOIN theater t ON s.theater_id = t.id
+    WHERE s.movie_id = $1
+    ORDER BY s.screening_date, s.start_time
+  `;
+  const result = await query(text, [movieId]);
+  return result.rows;
+},
 
-  async findScreeningById(id: number): Promise<Screening | null> {
-    const text = `SELECT * FROM screening WHERE id=$1`;
-    const result = await query<Screening>(text, [id]);
-    return result.rows[0] || null;
-  },
+  async findScreeningById(id: number): Promise<any | null> {
+  const text = `
+    SELECT 
+      s.*,
+      m.title AS movie_title
+    FROM screening s
+    JOIN movie m ON s.movie_id = m.id
+    WHERE s.id = $1
+  `;
+  const result = await query(text, [id]);
+  return result.rows[0] || null;
+},
 
-  async findScreeningSeats(screeningId: number): Promise<ScreeningSeat[]> {
-    const text = `SELECT * FROM screening_seat WHERE screening_id=$1 ORDER BY seat_id`;
-    const result = await query<ScreeningSeat>(text, [screeningId]);
-    return result.rows;
-  },
+  async findScreeningSeats(screeningId: number): Promise<ScreeningSeatWithNumber[]> {
+  const text = `
+    SELECT 
+      ss.id, 
+      ss.screening_id, 
+      ss.seat_id, 
+      ss.theater_id, 
+      ss.is_reserved, 
+      s.seat_number
+    FROM screening_seat ss
+    JOIN seat s ON ss.seat_id = s.id
+    WHERE ss.screening_id = $1
+    ORDER BY s.seat_number
+  `;
+  const result = await query<ScreeningSeatWithNumber>(text, [screeningId]);
+  return result.rows;
+},
 
   async findReservedSeats(screeningSeatIds: number[]): Promise<number[]> {
     if (screeningSeatIds.length === 0) return [];
@@ -76,6 +108,12 @@ async markSeatsUnreserved(screeningSeatIds: number[]): Promise<number> {
   async findMovieById(movieId: number): Promise<Movie | null> {
   const text = `SELECT * FROM movie WHERE id=$1`;
   const result = await query<Movie>(text, [movieId]);
+  return result.rows[0] || null;
+},
+
+async findTheaterById(theaterId: number): Promise<Theater | null> {
+  const text = `SELECT * FROM theater WHERE id = $1`;
+  const result = await query<Theater>(text, [theaterId]);
   return result.rows[0] || null;
 }
 };
