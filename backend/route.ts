@@ -16,6 +16,6 @@ router.use('/screening', screeningRouter);
 router.use('/movie', movieRouter);
 router.use('/reservations', reservationsRouter);
 router.use(homeRouter);
-router.use(makeReservationRouter);
+router.use('/make-reservation', makeReservationRouter);
 
 export default router;

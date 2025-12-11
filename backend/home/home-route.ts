@@ -1,9 +1,7 @@
 import express from 'express';
-import { homeRouter } from './home-ctrl';
-
+import { getHome } from './home-ctrl';
 const router = express.Router();
 
-// /api 경로에 homeRouter 연결
-router.use(homeRouter);
+router.route('/home').get(getHome);
 
 export default router;
