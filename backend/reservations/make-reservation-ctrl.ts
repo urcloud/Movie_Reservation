@@ -1,10 +1,7 @@
-import express from "express";
 import { ScreeningService, ScreeningSeatService, ReservationService, MovieService, TheaterService } from "../reservations/make-reservation-service";
-import { requireLogin } from "../auth/auth-ctrl";
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 
-export const makeReservationRouter = express.Router();
-
-makeReservationRouter.get("/screenings", async (req, res) => {
+export const getScreenings = async (req: Request, res: Response) => {
   try {
     const movieId = Number(req.query.movie_id);
     const rows = await ScreeningService.listByMovieId(movieId);
@@ -12,33 +9,37 @@ makeReservationRouter.get("/screenings", async (req, res) => {
   } catch (err: any) {
     res.status(err.statusCode || 500).json({ message: err.message });
   }
-});
+};
 
-makeReservationRouter.get("/screenings/:id", async (req, res) => {
+export const getScreeningById = async (req: Request, res: Response) => {
   try {
     const row = await ScreeningService.getById(Number(req.params.id));
     res.json({ screening: row });
   } catch (err: any) {
     res.status(err.statusCode || 500).json({ message: err.message });
   }
-});
+};
 
-makeReservationRouter.get("/screenings/:id/seats", async (req, res) => {
+export const getScreeningSeats = async (req: Request, res: Response) => {
   try {
-    const seats = await ScreeningSeatService.listByScreeningId(Number(req.params.id));
+    const seats = await ScreeningSeatService.listByScreeningId(
+      Number(req.params.id)
+    );
     res.json({ seats });
   } catch (err: any) {
     res.status(err.statusCode || 500).json({ message: err.message });
   }
-});
+};
 
-makeReservationRouter.post("/reservations", requireLogin, async (req, res) => {
+export const createReservation = async (req: Request, res: Response) => {
   try {
     const auth = (req as any).auth;
     const email: string | undefined = auth?.email;
 
     if (!email) {
-      return res.status(401).json({ success: false, message: "로그인이 필요합니다." });
+      return res
+        .status(401)
+        .json({ success: false, message: "로그인이 필요합니다." });
     }
 
     const result = await ReservationService.create({
@@ -54,9 +55,9 @@ makeReservationRouter.post("/reservations", requireLogin, async (req, res) => {
       conflict_ids: err.conflict_ids || undefined,
     });
   }
-});
+};
 
-makeReservationRouter.get("/screenings/:id/movie", async (req, res) => {
+export const getScreeningMovie = async (req: Request, res: Response) => {
   try {
     const screeningId = Number(req.params.id);
     const screening = await ScreeningService.getById(screeningId);
@@ -68,9 +69,9 @@ makeReservationRouter.get("/screenings/:id/movie", async (req, res) => {
       message: err.message,
     });
   }
-});
+};
 
-makeReservationRouter.get("/screenings/:id/theater", async (req, res) => {
+export const getScreeningTheater = async (req: Request, res: Response) => {
   try {
     const screeningId = Number(req.params.id);
     const screening = await ScreeningService.getById(screeningId);
@@ -82,4 +83,4 @@ makeReservationRouter.get("/screenings/:id/theater", async (req, res) => {
       message: err.message,
     });
   }
-});
+};
